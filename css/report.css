@@ -1,0 +1,22 @@
+#detailsDiv {
+    width: 70%;
+}
+#coursesDiv {
+    width: 80%;
+}
+.logo1 {
+    position: absolute;
+    top: 15%;
+    left: 20px;
+    /* transform: translateY(-50%); */
+    width: 300px; 
+    height: auto;
+  }
+  .logo2 {
+    position: absolute;
+    top: 20%;
+    right: 20px;
+    transform: translateX(-50%);
+    width: 60px; 
+    height: auto;
+  }
