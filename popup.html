@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPA Calculator</title>
+  <link rel="stylesheet" href="./css/popup.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./js/bootstrap-main/dist/css/bootstrap.min.css"
+  integrity="3017df4a76db5f01c2b99b603d88b03106df13bcfe18e67b7c13c2341d3a67df" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">  
+  <script src="./js/bootstrap-main/dist/js/bootstrap.bundle.min.js"></script>
+  
+</head>
+
+<body>
+  <header class="bg-primary text-center py-2 position-relative">
+      <img src="./img/logo-white.png" alt="Logo" class="logo1">
+    <h3 class="text-light my-2" id="headTitle">GPA Genie</h3>
+    <img src="./img/logo2.png" alt="Logo" class="logo2">
+  </header>
+  <div class="bg-primary p-1 my-1"></div>
+
+  <main class="container">
+    <div class="container mt-2" id="semesterList"> 
+      <h4 id="semesterHeading" style="font-size: medium" class="text-primary"></h4>
+    </div>
+    <div class="container card p-0" id="gpaDiv">
+
+
+  </div>
+
+  
+    <div id="alert" class="container mt-2"></div>
+
+    <section id="calculateBtnSxn" class="my-2">
+      <button type="button" class="btn btn-success btn-sm" id="calculateSelBtn">Calculate Selected Courses CGPA</button>
+      <button type="button" class="btn btn-success btn-sm" id="calculateBtn">Overall CGPA</button>
+    </section>
+
+  </main>
+
+  <footer class="bg-light text-dark text-center py-0">
+
+    <p>&copy; Made by Shubham Dubey</p>
+
+  </footer>
+
+  <script src="./js/popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+{
+    "manifest_version": 3,
+   
+    "name": "GPA Calculator",
+    "description": "A simple GPA Calculator that takes in the list of grades and Calculate GPA According to it.",
+    "version": "2.0.0",
+   
+    "icons": {
+        "48": "./img/logo2-square.png"
+    },
+
+    "web_accessible_resources": [
+      {
+        "resources": ["report.html", "./js/report.js"],
+        "matches": ["<all_urls>"]
+      }
+    ],
+
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "48": "./img/logo2.png"
+       },
+       "default_title": "GPA Calculator"
+    },
+   
+    "permissions": [
+       "activeTab",
+       "storage",
+       "scripting"
+    ],
+
+     "content_scripts": [
+       {
+        "matches": ["https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage*"],
+         "js": ["./js/content.js"]
+       }
+    ],
+    "background": {
+        "service_worker": "./js/background.js"
+      }
+   }
