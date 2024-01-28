@@ -15,6 +15,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const credits = allData[i].creditsArray;
             const grades = allData[i].grades;
 
+            
             const thead = document.createElement("thead");
             thead.className = "table-primary";
 

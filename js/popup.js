@@ -247,7 +247,6 @@ function getData() {
     let data = localStorage.getItem('div3');
     gpaDiv.innerHTML = data;
 }
-
 // Funtion to get the Date in (MM Month) Format
 function date() {
     let currentDate = new Date();

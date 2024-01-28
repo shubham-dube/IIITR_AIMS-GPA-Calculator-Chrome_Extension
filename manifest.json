@@ -9,6 +9,7 @@
         "48": "./img/logo2-square.png"
     },
 
+    
     "web_accessible_resources": [
       {
         "resources": ["report.html", "./js/report.js"],
