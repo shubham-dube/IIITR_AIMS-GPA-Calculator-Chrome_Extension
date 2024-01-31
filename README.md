@@ -1,9 +1,9 @@
 
 # AIMS GPA Calculator Extension
 ===============================================
-This extension Just Calculates the CGPA and SGPA of the selected Semesters. it is based on the Grades.
-Developed by: Shubham Dubey (CS23B1066).
-Date of Development : 27th Jan, 2024
+This extension Just Calculates the CGPA and SGPA of the selected Semesters.
+*Developed by: Shubham Dubey*
+*Date of Development : 27th Jan, 2024*
 -----------------------------------------------------------------------
 
 *AIMS-GPA-Calculator* extension is only supported to the Google Chrome. It is developed for the **AIMS Portal**, IIIT Raichur. It is available at my Repository -  https://github.com/shubham-dube/IIITR_AIMS-GPA-Calculator-Chrome_Extension. 
