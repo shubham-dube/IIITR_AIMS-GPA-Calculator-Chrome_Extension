@@ -1,6 +1,5 @@
 
 # AIMS GPA Calculator Extension
-===============================================
 ### This extension Just Calculates the CGPA and SGPA of the selected Semesters.
 ### *Developed by: Shubham Dubey*
 ### *Date of Development : 27th Jan, 2024*
