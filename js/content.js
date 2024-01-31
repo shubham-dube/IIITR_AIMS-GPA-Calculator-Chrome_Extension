@@ -1,7 +1,5 @@
-// after fully loading of webpage, then my operations will start in background on the webpage
 window.onload = () => {
    
-    // to get rid of any unloaded data 
     setTimeout(() => {
         const semesterElements = [];
         const semesterNames = [];
@@ -39,8 +37,8 @@ function calculateDetails(ul,semesterName,flag){
     const grades = [];
     const regtypes = []
     const divsPersonal = document.querySelectorAll(".flexDiv");
-    const gradeElement = ul.getElementsByClassName("col8 col");    // These are elements containing non-Necessary Texts
-    const creditsElement = ul.getElementsByClassName("col3 col"); //
+    const gradeElement = ul.getElementsByClassName("col8 col");    
+    const creditsElement = ul.getElementsByClassName("col3 col"); 
     const courseNameElements = ul.getElementsByClassName("col2 col");
     const courseCodeElements = ul.getElementsByClassName("col1 col");
     const regTypeElements = ul.getElementsByClassName("col4 col");
@@ -87,7 +85,6 @@ function calculateDetails(ul,semesterName,flag){
     }
     return allData;
 }
-  // Just a function to convert grades into points
   function gradesToPoints(grade){
     switch (grade) {
         case "A+": return 10; 

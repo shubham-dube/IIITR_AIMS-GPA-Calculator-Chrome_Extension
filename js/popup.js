@@ -1,18 +1,15 @@
 const port3 = chrome.runtime.connect({ name: 'semestersData' });
-// Storing Element Globally which is needed afterwards
 const calculateSelBtn = document.getElementById("calculateSelBtn");
 const calculateBtn = document.getElementById("calculateBtn");
 const gpaDiv = document.getElementById("gpaDiv");
 const partialData = [];
 
-// CalculateBtn Click event Listener
 calculateSelBtn.addEventListener("click", ()=>{
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
 
         let tab = tabs[0];
         url = tab.url;
 
-        // alerting the user that they are not on AIMS Portal
         if (!url.startsWith("https://aims.iiitr.ac.in")) {
             
             let alerHTML = `<div class="alert alert-info alert-dismissible> 
@@ -22,7 +19,6 @@ calculateSelBtn.addEventListener("click", ()=>{
             document.getElementById("alert").innerHTML = alerHTML;
 
         }
-        // Sending Message to the Service Worker for requesting GPA
         else {
                 let data = localStorage.getItem("semestersData");
                 data = JSON.parse(data);
@@ -101,21 +97,24 @@ calculateSelBtn.addEventListener("click", ()=>{
                         partialData[0].finalGPA = GPA; 
                         partialData[0].finalcredits = totalCredits;
                         addGpaInList(GPA);
+
                         const div = document.createElement("div");
                         div.className = "dropdown";
                         div.classList.add("mb-2");
+                        div.classList.add("pr-2");
                         const btn = document.createElement("button");
                         btn.innerHTML = "See SemesterWise";
                         btn.type = "button";
                         btn.classList.add("btn");
                         btn.classList.add("btn-primary");
                         btn.classList.add("btn-sm");
-                        
                         btn.classList.add("btn-block");
                         btn.classList.add("dropdown-toggle");
+                        btn.classList.add("mr-2");
                         btn.setAttribute("data-bs-toggle", "dropdown");
                         btn.setAttribute("aria-expanded", "false");
                         const ul = document.createElement("ul");
+                        ul.classList.add("tableClass");
                         ul.classList.add("dropdown-menu");
                         ul.classList.add("dropdown-menu-table");
                         ul.classList.add("p-3");
@@ -169,15 +168,11 @@ port3.onMessage.addListener((data) => {
     localStorage.setItem("semestersData", data);
 });
 
-// On List Click Event Handler
 gpaDiv.addEventListener("click", editGpaList)
 
-// Funtion to edit list on the basis of event
 function editGpaList(element) {
-    // To Delete the Parent element that contain the GPA Data
     if (element.target.tagName === "BUTTON" && element.target.id === "delete"){
         element.target.parentElement.parentElement.remove();
-        // To save this
         saveData();
     }
 
@@ -188,34 +183,29 @@ function editGpaList(element) {
     }
 }
 
-// Function to Structure that GPA on the UI of the Extension for better Experience
 function addGpaInList(GPA) {
-    // Declaring Classes of Buttons and list in which all of this is going to display
     let classListLi = ["align-items-center", "m-1", "p-2", "card-body"];
     let classListBtnDel = ["btn", "btn-danger", "btn-sm"];
     let classListBtnReport = ["btn", "btn-primary", "btn-sm"];
 
-    // Creating the list element and adding classes and innerText
     let ol = document.createElement("ol");
     ol.id = "gpaList";
     ol.className = "card";
 
     let li1 = document.createElement("li");
     li1.className = "innerline";
-    li1.innerHTML = "GPA: " + GPA + " | " + date();
+    li1.innerHTML = "CGPA: " + GPA + " | " + date();
     let li2 = document.createElement("li");
     for (let i = 0; i < classListLi.length; i++) {
         li1.classList.add(classListLi[i]);
         li2.classList.add(classListLi[i]);
     }
 
-    // Creating Button Elements and adding its innerTEXT
     let delBtn = document.createElement("button");
     let Report = document.createElement("button");
     delBtn.innerHTML = "Delete";
     Report.innerHTML = "Report";
 
-    // Adding ID's , Classes and Type to all buttons so it can be identified later
     for (let i = 0; i < classListBtnDel.length; i++) {
         delBtn.classList.add(classListBtnDel[i]);
         Report.classList.add(classListBtnReport[i]);
@@ -225,11 +215,9 @@ function addGpaInList(GPA) {
     delBtn.type = "button";
     Report.type = "button";
 
-    //apending created elements to the list Element
     li1.appendChild(delBtn);
     li1.appendChild(Report);
 
-    // appending my final list to display the user
     ol.appendChild(li1);
 
     gpaDiv.appendChild(ol);
@@ -237,17 +225,14 @@ function addGpaInList(GPA) {
     saveData();
 }
 
-// Function to save the whole data that is displaying currently to the user
 function saveData() {
     localStorage.setItem('div3', gpaDiv.innerHTML);
 }
 
-// Function to load the saved Data from Local Storage into the User Interface
 function getData() {
     let data = localStorage.getItem('div3');
     gpaDiv.innerHTML = data;
 }
-// Funtion to get the Date in (MM Month) Format
 function date() {
     let currentDate = new Date();
     let day = currentDate.getDate();
@@ -265,7 +250,7 @@ function displaySemester(){
 
     const semesterList = document.getElementById("semesterList");
     const semesterHeading = document.getElementById("semesterHeading");
-    semesterHeading.innerHTML = "Select the Semesters to Calculate GPA";
+    semesterHeading.innerHTML = "Select the Semesters to Calculate CGPA";
 
     let backlogDataIndices = [];
     for(let i=0;i<data.length;i++){
@@ -332,6 +317,5 @@ function displaySemester(){
     });
 }
 
-// Calling Funtion to Display the stored Data
 getData();
 displaySemester();
