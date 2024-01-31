@@ -22,9 +22,9 @@ Google Chrome will now install the AIMS-GPA-Calculator extension.
 2. Here you find the all the Semesters you have completed or not (Both). Select the semester for which you want to calculate the CGPA.After Selecting the Semesters, Click on the **Calculate CGPA for selected Semesters** Button.
 3. If you want to calculate overal CGPA till Now, You just have to click **Overall GPA** Button. You can also see the SGPA Semesterwise using the button given *Show SemesterWise*. You can calculate multiple CGPA's, they are saved once they calculated. you can delete them using the delete button given.
 4. if you want the Full Report of the calculated CGPA, Click on the Report Button . It Will Show The Details Of All Subjects with their Credits and Grades.
-**Remember** : 1. The Report button will only show the Report of latest calculated CGPA.
-               2. You can calculate your CGPA Offline Also if you have opened the website once, You access their last updated data after going to the AIMS Portal (you must have to go there even if you are offline, then it will work).
-               3. This Extension will only work on the **aims.iiitr.ac.in**  website.
+5. **Remember** : 1. The Report button will only show the Report of latest calculated CGPA.
+                  2. You can calculate your CGPA Offline Also if you have opened the website once, You access their last updated data after going to the AIMS Portal (you must have to go there even if you are offline, then it will work).
+                  3. This Extension will only work on the **aims.iiitr.ac.in**  website.
 
 
 ## Support and Feedback
