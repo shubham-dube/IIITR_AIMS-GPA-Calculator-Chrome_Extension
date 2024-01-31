@@ -12,6 +12,7 @@
 1. Copy the files from my repository to your laptop/PC. 
 2. Open **Google Chrome**, go to chrome://extensions and switch on **Developer Mode**. 
 3. Click on **Load Unpacked**, navigate to the directory where files are copied and select that directory. 
+4. A demo Video (**Demo Video.mp4**) is Available to this directory, You can access it to configure this Extension.
 
 Google Chrome will now install the AIMS-GPA-Calculator extension. 
 
