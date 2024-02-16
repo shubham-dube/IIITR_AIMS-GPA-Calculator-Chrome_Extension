@@ -81,7 +81,7 @@ calculateSelBtn.addEventListener("click", ()=>{
                                 for(let j=0;j<backlogSubjects.length;j++){
                                     for(let k=0;k<courses.length;k++){
                                         if(backlogSubjects[j]==courses[k]){
-                                            if(grades[k] == "FR" || grades[k] == "FS"){
+                                            if(grades[k] == "FR" || grades[k] == "FS" || grades[k]=="F" || grades[k] =="I"){
                                                 data[semesterIndices[i]].credits -= backlogCredits[j];
                                             }
                                         }
