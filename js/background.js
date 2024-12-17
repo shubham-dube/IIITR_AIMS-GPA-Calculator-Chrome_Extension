@@ -4,11 +4,6 @@ let semestersData;
 chrome.runtime.onMessage.addListener(
    function(request, sender, sendResponse) {
 
-       if (request.action == "sendSemestersData"){
-          semestersData = request.value;
-          console.log(semestersData[0].name);
-       }
-
        if(request.action === "showReport"){
         data = request.value;
         console.log(data[0].name);
@@ -22,7 +17,6 @@ chrome.runtime.onMessage.addListener(
             port.postMessage("noData");
           }
     }
-
 });
 
 function sendReportData(reportTabId,data) {
@@ -32,12 +26,3 @@ function sendReportData(reportTabId,data) {
       }
   });
 }
-
-chrome.runtime.onConnect.addListener((port) => {
-
-  if (port.name === 'semestersData') {
-    console.log(semestersData[0].gpa);
-    port.postMessage(semestersData);
-  }
-
-});

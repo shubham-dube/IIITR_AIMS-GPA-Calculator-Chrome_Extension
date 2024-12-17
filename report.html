@@ -1,87 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  
+
 <head>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPA Report</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdnjs.cloudflare.com;">
+  <title>Detailed GPA Report</title>
   <link rel="stylesheet" href="./css/report.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href=
-  "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
-  integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
-  crossorigin="anonymous">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <script src="./js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body >
+<body>
 
   <header class="bg-primary text-center py-3 position-relative">
     <img src="./img/logo-full-white.png" alt="Logo" class="logo1">
-  <h3 class="text-light my-2" id="headTitle">GPA Genie</h3>
-  <img src="./img/logo2-square.png" alt="Logo" class="logo2">
-  <!-- <div class="bg-light p-1"></div> -->
-</header>
-<div class="bg-primary p-1 my-1"></div>
+    <h3 class="text-light my-2" id="headTitle">GPA GENIE</h3>
+    <img src="./img/logo2-square.png" alt="Logo" class="logo2">
+    <!-- <div class="bg-light p-1"></div> -->
+  </header>
+  <div class="bg-primary p-1 my-1"></div>
 
   <main class="container">
+  
+    <section id="detailsSection" >
+      <div class="container my-5" id="detailsDiv">
+        <h4>Personal Details</h4>
+        <table class="table table-bordered table-hover table-sm" id="personalDetailsTable">
+          <tbody id="personalDetails">
+            <tr>
+              <td><label>Name</label></td>
+              <td><span id="name"></span></td>
+            </tr>
+            <tr>
+              <td><label>Roll Number</label></td>
+              <td><span id="roll"></span></td>
+            </tr>
+            <tr>
+              <td><label>Branch</label></td>
+              <td><span id="branch"></span></td>
+            </tr>
+            <tr>
+              <td><label>Student Type</label></td>
+              <td><span id="type"></span></td>
+            </tr>
+            <tr>
+              <td><label>CGPA</label></td>
+              <td><span id="GPA"></span></td>
+            </tr>
+            <tr>
+              <td><label>Total Credits Completed</label></td>
+              <td><span id="credit"></span></td>
+            </tr>
+          </tbody>
+        </table>
 
-    <section id="detailsSection ">
-        <div class="container my-5" id="detailsDiv">
-            <h4>Personal Details</h4>
-            <table class="table table-bordered table-hover table-sm" id="personalDetailsTable">
-                <tbody id="personalDetails">
-                <tr>
-                  <td><label>Name</label></td>
-                  <td><span id="name"></span></td>
-                </tr>
-                <tr>
-                  <td><label>Roll Number</label></td>
-                  <td><span id="roll"></span></td>
-                </tr>
-                <tr>
-                  <td><label>Branch</label></td>
-                  <td><span id="branch" ></span></td>
-                </tr>
-                <tr>
-                  <td><label>Student Type</label></td>
-                  <td><span id="type"></span></td>
-                </tr>
-                <tr>
-                  <td><label>GPA</label></td>
-                  <td><span id="GPA"></span></td>
-                </tr>
-                <tr>
-                  <td><label>Total Credits Completed</label></td>
-                  <td><span id="credit"></span></td>
-                </tr>
-              </tbody>
-            </table>
-
-        </div>
+      </div>
     </section>
-    <section id="courseSection ">
-        <div class="container my-5" id="coursesDiv">
-            <h4>Selected Semesters</h4>
-            <table class="table table-bordered table-hover table-sm" id="coursesTable">
+    <section id="courseSection " class="html2pdf__page-break">
+      <div class="container my-5" id="coursesDiv">
+        <h4>Selected Semesters</h4>
+        <table class="table table-bordered table-hover table-sm" id="coursesTable">
 
-            </table>
-            <button type="button" class="btn btn-danger" id="printBtn">Print</button>
+        </table>
+        <button type="button" class="btn btn-danger html2pdf__page-break" id="printBtn">Print</button>
 
-        </div>
+      </div>
     </section>
 
   </main>
 
-  <footer class="bg-light text-dark text-center py-0">
+  <footer class="bg-light text-dark text-center py-0 html2pdf__page-break">
 
-    <p>&copy; Made by Shubham Dubey</p>
+    <p>&copy; Made by Shubham Dubey (<a href="https://shubhamdube.in" target="_blank">Portfolio</a>)</p>
 
   </footer>
 
-  <script src="./js/report.js"></script>
+  <script src="./js/report.js" defer></script>
 </body>
 
 </html>

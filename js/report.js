@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         document.getElementById("roll").innerHTML = allData[0].roll;
         document.getElementById("branch").innerHTML = allData[0].branch;
         document.getElementById("type").innerHTML = allData[0].type;
-        document.getElementById("GPA").innerHTML = allData[0].finalGPA;
+        document.getElementById("GPA").innerHTML = `${allData[0].finalGPA}`;
         document.getElementById("credit").innerHTML = allData[0].finalcredits;
         for(let i=0;i<allData.length;i++){
             const codes = allData[i].codes;
@@ -64,12 +64,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 const td1 = document.createElement("td");
                 const td2 = document.createElement("td");
                 td1.colSpan = 3;
-                td1.innerHTML = "<b>Credits Completed</b>"
+                td1.innerHTML = "<b>Semester GPA (SGPA)</b>"
                 
-                td2.innerHTML = allData[i].credits;
+                td2.innerHTML = allData[i].gpa;
                 tr.appendChild(td1);
                 tr.appendChild(td2);
                 tbody.appendChild(tr);
+
+                const tr2 = document.createElement("tr");
+                const td21 = document.createElement("td");
+                const td22 = document.createElement("td");
+                td21.colSpan = 3;
+                td21.innerHTML = "<b>Credits Completed</b>"
+                
+                td22.innerHTML = allData[i].credits;
+                tr2.appendChild(td21);
+                tr2.appendChild(td22);
+                tbody.appendChild(tr2);
                 Table.appendChild(tbody);
               }
             }
