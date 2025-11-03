@@ -1,35 +1,192 @@
+# GPA Genie - Professional CGPA Calculator
 
-# AIMS GPA Calculator Extension
-### This extension Just Calculates the CGPA and SGPA of the selected Semesters.
-### *Developed by: Shubham Dubey*
-### *Date of Development : 27th Jan, 2024*
------------------------------------------------------------------------
+A modern, feature-rich Chrome extension for calculating CGPA, projecting grades, viewing analytics, and generating professional transcripts for IIIT Raichur AIMS Portal.
 
-*AIMS-GPA-Calculator* extension is only supported to the Google Chrome. It is developed for the **AIMS Portal**, IIIT Raichur. It is available at my Repository -  https://github.com/shubham-dube/IIITR_AIMS-GPA-Calculator-Chrome_Extension. 
+## ✨ Features
 
-## Installation
+### Core Features
+- 📊 **Smart GPA Calculator**: Calculate CGPA for selected semesters with intelligent rule-based calculations
+- 🎯 **Projected GPA**: Add expected courses and grades to see future CGPA
+- 📈 **Analytics Dashboard**: Visualize semester-wise performance with charts and trends
+- 📄 **Professional Transcripts**: Generate official-looking transcripts with multiple templates
+- 💾 **Save Calculations**: Store and reload previous GPA calculations
+- ⚙️ **Customizable Settings**: Configure decimal places, default views, and more
 
-1. Copy the files from my repository to your laptop/PC. 
-2. Open **Google Chrome**, go to chrome://extensions and switch on **Developer Mode**. 
-3. Click on **Load Unpacked**, navigate to the directory where files are copied and select that directory. 
-4. A demo Video (**Demo Video.mp4**) is Available to this directory, You can access it to configure this Extension.
+### Intelligent Calculation Rules
+- ✅ Handles duplicate courses (best grade considered)
+- ✅ Proper backlog course management
+- ✅ Excludes non-counted grades (I, S, U, AU)
+- ✅ Semester-wise and cumulative GPA calculation
+- ✅ Credits and grade points tracking
 
-Google Chrome will now install the AIMS-GPA-Calculator extension. 
+### UI/UX Features
+- 🎨 Modern, professional interface with Tailwind CSS
+- 🌊 Smooth animations and transitions
+- 📱 Responsive design
+- 🔄 Real-time GPA updates on course selection
+- ⚡ Fast performance with optimized React components
 
-## Usage
+## 🚀 Installation
 
-1. Open AIMS Portal. Navigate to your **AIMS *View My Course* Page** in Chrome, click on logo in your Chrome extensions bar (if you pinned it) otherwise click on the extensions button on chrome and pin it first then click on the logo.
-2. Here you find the all the Semesters you have completed or not (Both). Select the semester for which you want to calculate the CGPA.After Selecting the Semesters, Click on the **Calculate CGPA for selected Semesters** Button.
-3. If you want to calculate overal CGPA till Now, You just have to click **Overall GPA** Button. You can also see the SGPA Semesterwise using the button given *Show SemesterWise*. You can calculate multiple CGPA's, they are saved once they calculated. you can delete them using the delete button given.
-4. if you want the Full Report of the calculated CGPA, Click on the Report Button . It Will Show The Details Of All Subjects with their Credits and Grades.
-5. **Remember** :
-    1. The Report button will only show the Report of latest calculated CGPA.
-    2. You can calculate your CGPA Offline Also if you have opened the website once, You access their last updated data after going to the AIMS Portal (you must have to go there even if you are offline, then it will work).
-    3. This Extension will only work on the **aims.iiitr.ac.in**  website.
+### For Development
 
+1. **Clone the repository**
+```bash
+   git clone https://github.com/yourusername/gpa-genie.git
+   cd gpa-genie
+```
 
-## Support and Feedback
+2. **Install dependencies**
+```bash
+   npm install
+```
 
-if you have any  issues or suggestions regarding this project feel free to contact me at :
+3. **Build the extension**
+```bash
+   npm run build
+```
 
-*cs23b1066@iiitr.ac.in* or *itzshubhamofficial@gmail.com*
+4. **Load in Chrome**
+   - Open Chrome and go to `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` folder
+
+### For Development with Live Reload
+```bash
+npm run dev
+```
+
+This will watch for changes and rebuild automatically.
+
+## 📖 Usage
+
+1. **Navigate to AIMS Portal**
+   - Go to your Course History page on AIMS
+   - The extension will automatically inject course selectors
+
+2. **Calculate GPA**
+   - Click the extension icon
+   - Select semesters you want to include
+   - Click "Calculate CGPA"
+   - View your results with detailed breakdown
+
+3. **View Analytics**
+   - Switch to the Analytics tab
+   - See semester-wise GPA trends
+   - View grade distribution and performance stats
+
+4. **Project Future GPA**
+   - Go to Projected tab
+   - Add courses with expected grades
+   - See how they'll impact your CGPA
+
+5. **Generate Transcript**
+   - After calculating GPA, click "Transcript"
+   - Choose template (Official or Minimal)
+   - Print or download as PDF
+
+## 🏗️ Project Structure
+```
+gpa-genie/
+├── src/
+│   ├── background/         # Background service worker
+│   ├── content/           # Content scripts for AIMS
+│   ├── popup/             # Extension popup UI
+│   ├── transcript/        # Transcript generation
+│   └── shared/            # Shared utilities and rules
+├── public/                # Static assets
+├── dist/                  # Build output
+└── package.json
+```
+
+## 🔧 Configuration
+
+### GPA Calculation Rules
+
+All calculation rules are centralized in `src/shared/rules/GPACalculationRules.js`:
+
+- **Duplicate Course Rule**: Only best grade is counted
+- **Backlog Rule**: Cleared backlogs replace original fails
+- **Grade Counting**: Only valid, graded courses count toward GPA
+- **Credit System**: 10-point scale (A+=10, F=0)
+
+### Adding New Rules
+```javascript
+// src/shared/rules/GPACalculationRules.js
+static yourNewRule(courses) {
+  // Implement your rule logic
+  return processedCourses;
+}
+```
+
+## 🎨 Customization
+
+### Changing Colors
+
+Edit `tailwind.config.js`:
+```javascript
+colors: {
+  primary: {
+    500: '#your-color',
+    // ...
+  },
+}
+```
+
+### Adding New Templates
+
+Create a new template in `src/transcript/templates/`:
+```jsx
+export default function YourTemplate({ data }) {
+  return (
+    <div className="transcript-page">
+      {/* Your template design */}
+    </div>
+  );
+}
+```
+
+## 🧪 Testing
+```bash
+# Run tests (when implemented)
+npm test
+
+# Lint code
+npm run lint
+```
+
+## 📦 Building for Production
+```bash
+npm run build
+```
+
+The production-ready extension will be in the `dist/` folder.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- IIIT Raichur for the AIMS portal
+- React and Tailwind CSS teams
+- All contributors and users
+
+## 📧 Contact
+
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+
+Project Link: [https://github.com/yourusername/gpa-genie](https://github.com/yourusername/gpa-genie)
+
+---
+
+Made with ❤️ for IIIT Raichur students
