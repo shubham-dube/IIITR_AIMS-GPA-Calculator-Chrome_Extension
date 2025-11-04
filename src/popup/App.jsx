@@ -14,16 +14,16 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('calculator');
   const [showSettings, setShowSettings] = useState(false);
   const [pageSelectedCourses, setPageSelectedCourses] = useState([]);
-  
-  const { 
-    semesters, 
-    loading, 
-    error, 
+
+  const {
+    semesters,
+    loading,
+    error,
     studentInfo,
     fetchData,
-    isOnAIMS 
+    isOnAIMS
   } = useSemesters();
-  
+
   const {
     selectedCourses,
     setSelectedCourses,
@@ -37,14 +37,14 @@ export default function App() {
   useEffect(() => {
     if (isOnAIMS) {
       fetchData();
-      
+
       // Listen for selection changes from content script
       chrome.runtime.onMessage.addListener((request) => {
         if (request.type === 'SELECTION_CHANGED') {
           setPageSelectedCourses(request.courses);
         }
       });
-      
+
       // Get initial selection
       getPageSelection();
     }
@@ -57,7 +57,9 @@ export default function App() {
         type: 'GET_SELECTED_COURSES',
       });
       if (response?.courses) {
+        calculateGPA(response?.courses, true);
         setPageSelectedCourses(response.courses);
+        setActiveTab('calculator');
       }
     } catch (error) {
       console.error('Error getting page selection:', error);
@@ -66,7 +68,7 @@ export default function App() {
 
   const calculateFromPageSelection = () => {
     if (pageSelectedCourses.length === 0) return;
-    
+
     const result = calculateGPA(pageSelectedCourses, true);
     setActiveTab('calculator');
   };
@@ -78,40 +80,13 @@ export default function App() {
     { id: 'saved', label: 'Saved', icon: FileText },
   ];
 
-  if (!isOnAIMS) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50">
-        <Header studentInfo={null} onSettingsClick={() => setShowSettings(true)} />
-        <div className="p-4">
-          <div className="card text-center py-6">
-            <FileText size={40} className="mx-auto text-primary-400 mb-3" />
-            <h3 className="text-base font-semibold text-gray-800 mb-2">
-              Open AIMS Portal
-            </h3>
-            <p className="text-xs text-gray-600 mb-3">
-              Navigate to Course History page
-            </p>
-            <a
-              href="https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary text-sm inline-block"
-            >
-              Open Course History
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50">
-      <Header 
-        studentInfo={studentInfo} 
-        onSettingsClick={() => setShowSettings(true)} 
+      <Header
+        studentInfo={studentInfo}
+        onSettingsClick={() => setShowSettings(true)}
       />
-      
+
       {/* Page Selection Quick Action */}
       {pageSelectedCourses.length > 0 && (
         <div className="bg-purple-50 border-b border-purple-200 px-3 py-2">
@@ -124,7 +99,7 @@ export default function App() {
           </button>
         </div>
       )}
-      
+
       {/* Tab Navigation */}
       <div className="bg-white border-b border-gray-200 px-2 py-1.5">
         <div className="flex gap-1">
@@ -134,9 +109,8 @@ export default function App() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                  activeTab === tab.id ? 'bg-primary-600 text-white' : 'text-gray-600 hover:bg-gray-100'
-                }`}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded-lg transition-all ${activeTab === tab.id ? 'bg-primary-600 text-white' : 'text-gray-600 hover:bg-gray-100'
+                  }`}
               >
                 <Icon size={14} />
                 {tab.label}
@@ -158,7 +132,7 @@ export default function App() {
         {error && (
           <div className="card bg-danger-50 border-danger-200 text-danger-800 py-3 px-3">
             <p className="text-xs">{error}</p>
-            <button 
+            <button
               onClick={fetchData}
               className="mt-2 text-danger-700 underline text-xs font-medium"
             >
@@ -172,22 +146,46 @@ export default function App() {
             {activeTab === 'calculator' && (
               <div className="space-y-3 animate-fade-in">
                 {gpaResult && (
-                  <GPACard 
-                    result={gpaResult} 
+                  <GPACard
+                    result={gpaResult}
                     onSave={saveCalculation}
                     studentInfo={studentInfo}
-                    selectedSemesters={semesters.filter(s => 
+                    selectedSemesters={semesters.filter(s =>
                       selectedCourses.some(c => c.semesterId === s.id)
                     )}
                   />
                 )}
-                
-                <SemesterSelector
-                  semesters={semesters}
-                  selectedCourses={selectedCourses}
-                  onSelectionChange={setSelectedCourses}
-                  onCalculate={(courses) => calculateGPA(courses, false)}
-                />
+                {!isOnAIMS ? (
+                  <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50">
+                    <div className="p-4">
+                      <div className="card text-center py-6">
+                        <FileText size={40} className="mx-auto text-primary-400 mb-3" />
+                        <h3 className="text-base font-semibold text-gray-800 mb-2">
+                          Open AIMS Portal
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-3">
+                          Navigate to Course History page
+                        </p>
+                        <a
+                          href="https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-primary text-sm inline-block p-2 px-4"
+                        >
+                          Open Course History
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <SemesterSelector
+                    semesters={semesters}
+                    selectedCourses={selectedCourses}
+                    onSelectionChange={setSelectedCourses}
+                    onCalculate={(courses) => calculateGPA(courses, false)}
+                  />
+                )}
+
               </div>
             )}
 
@@ -196,11 +194,11 @@ export default function App() {
             )}
 
             {activeTab === 'projected' && (
-              <ProjectedGPA  semesters={semesters} />
+              <ProjectedGPA semesters={semesters} />
             )}
 
             {activeTab === 'saved' && (
-              <SavedCalculations 
+              <SavedCalculations
                 calculations={savedCalculations}
                 onLoad={(calc) => {
                   setSelectedCourses(calc.courses);

@@ -11,6 +11,7 @@ export function useGPACalculator(semesters) {
   useEffect(() => {
     loadSavedCalculations();
     loadStudentInfo();
+    calculateGPA(semesters.flatMap((sem) => sem.courses ));
   }, []);
 
   const loadStudentInfo = async () => {
