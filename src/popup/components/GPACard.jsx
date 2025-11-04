@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Award, TrendingUp, BookOpen, Download, Save, FileText } from 'lucide-react';
+import { Save, FileText, CheckCircle } from 'lucide-react';
 
-export default function GPACard({ result, onSave, onViewTranscript }) {
+export default function GPACard({ result, onSave, onViewTranscript, studentInfo, selectedSemesters }) {
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
@@ -10,88 +10,75 @@ export default function GPACard({ result, onSave, onViewTranscript }) {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const getGPAColor = (gpa) => {
-    if (gpa >= 9) return 'text-green-600';
-    if (gpa >= 8) return 'text-blue-600';
-    if (gpa >= 7) return 'text-yellow-600';
-    if (gpa >= 6) return 'text-orange-600';
-    return 'text-red-600';
+  const handleTranscript = () => {
+    chrome.runtime.sendMessage({
+      type: 'OPEN_TRANSCRIPT',
+      data: {
+        student: studentInfo,
+        semesters: selectedSemesters,
+        result: result,
+      },
+    });
   };
 
-  const getGPAGrade = (gpa) => {
-    if (gpa >= 9.5) return 'Outstanding';
-    if (gpa >= 9) return 'Excellent';
-    if (gpa >= 8) return 'Very Good';
-    if (gpa >= 7) return 'Good';
-    if (gpa >= 6) return 'Average';
-    return 'Below Average';
+  const getPerformance = (gpa) => {
+    if (gpa >= 9) return { text: 'Outstanding', color: 'text-green-600', bg: 'bg-green-50' };
+    if (gpa >= 8) return { text: 'Excellent', color: 'text-blue-600', bg: 'bg-blue-50' };
+    if (gpa >= 7) return { text: 'Good', color: 'text-yellow-600', bg: 'bg-yellow-50' };
+    if (gpa >= 6) return { text: 'Average', color: 'text-orange-600', bg: 'bg-orange-50' };
+    return { text: 'Below Average', color: 'text-red-600', bg: 'bg-red-50' };
   };
+
+  const perf = getPerformance(result.gpa);
 
   return (
-    <div className="card bg-gradient-to-br from-white to-primary-50 border-2 border-primary-200 animate-scale-in">
-      {/* Main GPA Display */}
-      <div className="text-center mb-4">
-        <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full shadow-lg mb-3">
-          <div className="text-center">
-            <div className={`text-3xl font-bold text-white`}>
-              {result.gpa.toFixed(2)}
+    <div className={`card ${perf.bg} border-2 animate-scale-in p-3`}>
+      {/* Main GPA - Compact */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full shadow-lg">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-white leading-none">
+                {result.gpa.toFixed(2)}
+              </div>
+              <div className="text-[10px] text-primary-100">CGPA</div>
             </div>
-            <div className="text-xs text-primary-100">CGPA</div>
+          </div>
+          <div>
+            <div className={`text-sm font-bold ${perf.color}`}>{perf.text}</div>
+            <div className="text-xs text-gray-600">
+              {result.totalCredits} credits • {result.courseCount} courses
+            </div>
           </div>
         </div>
-        <p className="text-sm font-medium text-gray-600">{getGPAGrade(result.gpa)}</p>
+        
+        {result.earnedCredits < result.totalCredits && (
+          <div className="text-right">
+            <div className="text-xs text-gray-500">Earned</div>
+            <div className="text-sm font-bold text-gray-800">{result.earnedCredits}</div>
+          </div>
+        )}
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-white rounded-lg p-3 border border-gray-200">
-          <div className="flex items-center gap-2 mb-1">
-            <BookOpen size={16} className="text-primary-600" />
-            <span className="text-xs text-gray-600">Total Credits</span>
-          </div>
-          <p className="text-lg font-bold text-gray-800">{result.totalCredits}</p>
-        </div>
-
-        <div className="bg-white rounded-lg p-3 border border-gray-200">
-          <div className="flex items-center gap-2 mb-1">
-            <Award size={16} className="text-success-600" />
-            <span className="text-xs text-gray-600">Earned</span>
-          </div>
-          <p className="text-lg font-bold text-gray-800">{result.earnedCredits}</p>
-        </div>
-
-        <div className="bg-white rounded-lg p-3 border border-gray-200">
-          <div className="flex items-center gap-2 mb-1">
-            <TrendingUp size={16} className="text-blue-600" />
-            <span className="text-xs text-gray-600">Grade Points</span>
-          </div>
-          <p className="text-lg font-bold text-gray-800">{result.gradePoints}</p>
-        </div>
-
-        <div className="bg-white rounded-lg p-3 border border-gray-200">
-          <div className="flex items-center gap-2 mb-1">
-            <FileText size={16} className="text-purple-600" />
-            <span className="text-xs text-gray-600">Courses</span>
-          </div>
-          <p className="text-lg font-bold text-gray-800">{result.courseCount}</p>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
+      {/* Action Buttons - Compact */}
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          className={`flex-1 btn-secondary ${saved ? 'bg-success-100 text-success-700' : ''}`}
+          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 ${
+            saved 
+              ? 'bg-success-100 text-success-700' 
+              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+          }`}
           disabled={saved}
         >
-          <Save size={16} className="inline mr-1.5" />
+          {saved ? <CheckCircle size={14} /> : <Save size={14} />}
           {saved ? 'Saved!' : 'Save'}
         </button>
         <button
-          onClick={onViewTranscript}
-          className="flex-1 btn-primary"
+          onClick={handleTranscript}
+          className="flex-1 btn-primary py-2 text-xs flex items-center justify-center gap-1.5"
         >
-          <Download size={16} className="inline mr-1.5" />
+          <FileText size={14} />
           Transcript
         </button>
       </div>

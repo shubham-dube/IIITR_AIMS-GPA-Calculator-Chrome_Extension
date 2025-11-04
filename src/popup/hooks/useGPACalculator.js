@@ -3,7 +3,7 @@ import { GPACalculator } from '@shared/utils/gpaCalculator';
 import { STORAGE_KEYS } from '@shared/constants/messages';
 
 export function useGPACalculator(semesters) {
-  const [selectedSemesters, setSelectedSemesters] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const [gpaResult, setGpaResult] = useState(null);
   const [savedCalculations, setSavedCalculations] = useState([]);
 
@@ -18,10 +18,18 @@ export function useGPACalculator(semesters) {
     }
   };
 
-  const calculateGPA = (semesterIds) => {
-    const selected = semesters.filter(sem => semesterIds.includes(sem.id));
-    const result = GPACalculator.calculateCumulativeGPA(selected);
+  const calculateGPA = (courses, fromPage = false) => {
+    if (!courses || courses.length === 0) return null;
+    
+    // Create a mock semester structure for calculation
+    const mockSemester = { courses: courses };
+    const result = GPACalculator.calculateSemesterGPA(mockSemester);
     setGpaResult(result);
+    
+    if (!fromPage) {
+      setSelectedCourses(courses);
+    }
+    
     return result;
   };
 
@@ -29,11 +37,11 @@ export function useGPACalculator(semesters) {
     const calculation = {
       id: Date.now(),
       timestamp: new Date().toISOString(),
-      semesters: selectedSemesters,
+      courses: selectedCourses,
       result,
     };
 
-    const updated = [calculation, ...savedCalculations].slice(0, 20); // Keep last 20
+    const updated = [calculation, ...savedCalculations].slice(0, 20);
     setSavedCalculations(updated);
     
     await chrome.storage.local.set({
@@ -51,8 +59,8 @@ export function useGPACalculator(semesters) {
   };
 
   return {
-    selectedSemesters,
-    setSelectedSemesters,
+    selectedCourses,
+    setSelectedCourses,
     gpaResult,
     calculateGPA,
     saveCalculation,

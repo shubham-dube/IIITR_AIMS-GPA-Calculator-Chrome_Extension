@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Printer, FileText } from 'lucide-react';
+import { Download, Printer, FileText, Loader } from 'lucide-react';
 import OfficialTemplate from './templates/OfficialTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';
 
@@ -9,16 +9,43 @@ export default function Transcript() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Receive data from background script
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log('Transcript component mounted');
+    
+    // Listen for data from background
+    const messageListener = (request, sender, sendResponse) => {
+      console.log('Transcript received message:', request.type);
       if (request.type === 'TRANSCRIPT_DATA') {
+        console.log('Received transcript data:', request.data);
         setData(request.data);
         setLoading(false);
+        sendResponse({ success: true });
       }
-    });
+    };
+    
+    chrome.runtime.onMessage.addListener(messageListener);
 
-    // Request data
-    chrome.runtime.sendMessage({ type: 'GET_TRANSCRIPT_DATA' });
+    // Request data from background
+    setTimeout(() => {
+      console.log('Requesting transcript data');
+      chrome.runtime.sendMessage({ type: 'GET_TRANSCRIPT_DATA' }, (response) => {
+        if (response && response.data) {
+          console.log('Got transcript data from background:', response.data);
+          setData(response.data);
+          setLoading(false);
+        } else {
+          console.log('No data received, waiting for message...');
+          setTimeout(() => {
+            if (!data) {
+              setLoading(false);
+            }
+          }, 3000);
+        }
+      });
+    }, 100);
+
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
   }, []);
 
   const handlePrint = () => {
@@ -26,14 +53,14 @@ export default function Transcript() {
   };
 
   const handleDownloadPDF = () => {
-    window.print(); // Browser's save as PDF
+    window.print();
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <Loader className="animate-spin h-12 w-12 text-primary-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading transcript...</p>
         </div>
       </div>
@@ -45,7 +72,8 @@ export default function Transcript() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <FileText size={48} className="mx-auto text-gray-400 mb-4" />
-          <p className="text-gray-600">No transcript data available</p>
+          <p className="text-gray-600 mb-2">No transcript data available</p>
+          <p className="text-sm text-gray-500">Please calculate GPA first</p>
         </div>
       </div>
     );
@@ -54,7 +82,7 @@ export default function Transcript() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       {/* Controls */}
-      <div className="max-w-5xl mx-auto mb-6 no-print">
+      <div className="max-w-5xl mx-auto mb-6 no-print px-4">
         <div className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <label className="text-sm font-medium text-gray-700">Template:</label>
@@ -81,15 +109,17 @@ export default function Transcript() {
               className="flex items-center gap-2 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-700 transition-colors"
             >
               <Download size={18} />
-              Download PDF
+              Save as PDF
             </button>
           </div>
         </div>
       </div>
 
       {/* Transcript Content */}
-      {template === 'official' && <OfficialTemplate data={data} />}
-      {template === 'minimal' && <MinimalTemplate data={data} />}
+      <div className="max-w-5xl mx-auto px-4">
+        {template === 'official' && <OfficialTemplate data={data} />}
+        {template === 'minimal' && <MinimalTemplate data={data} />}
+      </div>
     </div>
   );
 }

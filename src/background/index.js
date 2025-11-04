@@ -4,78 +4,77 @@ import { TabService } from './services/tabService';
 
 let transcriptData = null;
 
-// Extension installation
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('GPA Genie installed:', details.reason);
   
   if (details.reason === 'install') {
-    // Initialize default settings
     StorageService.initializeSettings();
   }
 });
 
-// Message handling
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Background received message:', request.type);
 
-  switch (request.type) {
-    case MESSAGE_TYPES.OPEN_TRANSCRIPT:
-      handleOpenTranscript(request.data);
-      break;
-
-    case 'GET_TRANSCRIPT_DATA':
-      sendResponse({ type: 'TRANSCRIPT_DATA', data: transcriptData });
-      break;
-
-    case MESSAGE_TYPES.DATA_FETCHED:
-      // Cache the data
-      StorageService.saveData(request.data);
-      break;
-
-    default:
-      console.log('Unknown message type:', request.type);
+  if (request.type === MESSAGE_TYPES.OPEN_TRANSCRIPT || request.type === 'OPEN_TRANSCRIPT') {
+    handleOpenTranscript(request.data);
+    sendResponse({ success: true });
   }
 
-  return true; // Keep channel open for async responses
+  if (request.type === 'GET_TRANSCRIPT_DATA') {
+    sendResponse({ type: 'TRANSCRIPT_DATA', data: transcriptData });
+  }
+
+  if (request.type === MESSAGE_TYPES.DATA_FETCHED) {
+    StorageService.saveData(request.data);
+  }
+
+  return true;
 });
 
-// Handle transcript opening
 async function handleOpenTranscript(data) {
   try {
+    console.log('Opening transcript with data:', data);
+    
     // Store transcript data
     transcriptData = {
       student: data.student,
-      semesters: data.semesters.filter(sem => data.semesters.includes(sem.id)),
+      semesters: data.semesters || [],
       result: data.result,
       generatedAt: new Date().toISOString(),
     };
 
     // Open transcript page
-    const tab = await TabService.openTranscript();
+    const tab = await chrome.tabs.create({
+      url: chrome.runtime.getURL('transcript.html'),
+    });
     
-    // Send data once tab is ready
-    chrome.tabs.onUpdated.addListener(function listener(tabId, changeInfo) {
+    console.log('Transcript tab opened:', tab.id);
+    
+    // Wait for tab to load and send data
+    const sendDataToTab = (tabId, changeInfo) => {
       if (tabId === tab.id && changeInfo.status === 'complete') {
+        console.log('Tab loaded, sending data');
         chrome.tabs.sendMessage(tabId, {
           type: 'TRANSCRIPT_DATA',
           data: transcriptData,
-        });
-        chrome.tabs.onUpdated.removeListener(listener);
+        }).catch(err => console.error('Error sending to tab:', err));
+        
+        chrome.tabs.onUpdated.removeListener(sendDataToTab);
       }
-    });
+    };
+    
+    chrome.tabs.onUpdated.addListener(sendDataToTab);
+    
   } catch (error) {
     console.error('Error opening transcript:', error);
   }
 }
 
-// Context menu (optional - for right-click actions)
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'calculate-gpa',
-    title: 'Calculate GPA with GPA Genie',
-    contexts: ['page'],
-    documentUrlPatterns: ['https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage*'],
-  });
+chrome.contextMenus.create({
+  id: 'calculate-gpa',
+  title: 'Calculate GPA with GPA Genie',
+  contexts: ['page'],
+  documentUrlPatterns: ['https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage*'],
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

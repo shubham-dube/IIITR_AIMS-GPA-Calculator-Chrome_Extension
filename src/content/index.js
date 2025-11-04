@@ -8,7 +8,6 @@ let courseSelector = null;
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === MESSAGE_TYPES.FETCH_DATA) {
-    console.log('GPA Genie: Fetching data from page...');
     scraper.scrapeData().then(result => {
       sendResponse(result);
     });
@@ -16,7 +15,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   
   if (request.type === 'INJECT_SELECTORS') {
-    console.log('GPA Genie: Injecting course selectors...');
     if (!courseSelector) {
       courseSelector = new CourseSelector(scraper);
       courseSelector.inject();
@@ -25,15 +23,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   
-  if (request.type === 'GET_SELECTED') {
-    console.log('GPA Genie: Getting selected courses...');
+  if (request.type === 'GET_SELECTED_COURSES') {
     const selected = courseSelector ? courseSelector.getSelectedCourses() : [];
-    sendResponse({ selected });
+    sendResponse({ courses: selected });
+    return true;
+  }
+
+  if (request.type === 'UPDATE_SELECTION') {
+    if (courseSelector) {
+      courseSelector.updateSelection(request.selectedCourses);
+    }
+    sendResponse({ success: true });
     return true;
   }
 
   if (request.type === 'SELECT_ALL') {
-    console.log('GPA Genie: Selecting all courses...');
     if (courseSelector) {
       courseSelector.selectAll();
     }
@@ -57,6 +61,15 @@ if (window.location.href.includes('myCrsHistoryPage')) {
     if (table && !courseSelector) {
       courseSelector = new CourseSelector(scraper);
       courseSelector.inject();
+      
+      // Notify popup about selection changes
+      courseSelector.onSelectionChange = (selected) => {
+        chrome.runtime.sendMessage({
+          type: 'SELECTION_CHANGED',
+          courses: selected,
+        });
+      };
+      
       obs.disconnect();
     }
   });
@@ -66,13 +79,19 @@ if (window.location.href.includes('myCrsHistoryPage')) {
     subtree: true,
   });
 
-  // Fallback: inject after 2 seconds
   setTimeout(() => {
     if (!courseSelector) {
       const table = document.querySelector('.hierarchyContent');
       if (table) {
         courseSelector = new CourseSelector(scraper);
         courseSelector.inject();
+        
+        courseSelector.onSelectionChange = (selected) => {
+          chrome.runtime.sendMessage({
+            type: 'SELECTION_CHANGED',
+            courses: selected,
+          });
+        };
       }
     }
   }, 2000);
