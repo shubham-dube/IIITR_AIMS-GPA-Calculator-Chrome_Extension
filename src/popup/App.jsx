@@ -9,6 +9,7 @@ import SavedCalculations from './components/SavedCalculations';
 import SettingsPanel from './components/SettingsPanel';
 import { useSemesters } from './hooks/useSemesters';
 import { useGPACalculator } from './hooks/useGPACalculator';
+import DonateButton from './components/DonateButton';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('calculator');
@@ -211,6 +212,8 @@ export default function App() {
           </>
         )}
       </div>
+
+      <DonateButton />
 
       {showSettings && (
         <SettingsPanel onClose={() => setShowSettings(false)} />

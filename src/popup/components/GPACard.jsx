@@ -34,8 +34,8 @@ export default function GPACard({ result, onSave, studentInfo, selectedCourses }
     if (gpa >= 9) return { text: 'Outstanding', color: 'text-green-600', bg: 'bg-green-50' };
     if (gpa >= 8) return { text: 'Excellent', color: 'text-blue-600', bg: 'bg-blue-50' };
     if (gpa >= 7) return { text: 'Good', color: 'text-yellow-600', bg: 'bg-yellow-50' };
-    if (gpa >= 6) return { text: 'Average', color: 'text-orange-600', bg: 'bg-orange-50' };
-    return { text: 'Below Average', color: 'text-red-600', bg: 'bg-red-50' };
+    if (gpa >= 6) return { text: 'Keep Going', color: 'text-orange-600', bg: 'bg-orange-50' };
+    return { text: 'Keep Going', color: 'text-red-600', bg: 'bg-red-50' };
   };
 
   const perf = getPerformance(result.gpa);
