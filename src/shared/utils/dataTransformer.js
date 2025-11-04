@@ -42,7 +42,7 @@ export class DataTransformer {
         type: studentInfo.type,
         photo: studentInfo.photo,
       },
-      semesters: Array.from(semesterMap.values()).reverse(), // Most recent first
+      semesters: Array.from(semesterMap.values()), // Most recent first
     };
   }
   

@@ -45,34 +45,34 @@ export default function App() {
     { id: 'saved', label: 'Saved', icon: FileText },
   ];
 
-  if (!isOnAIMS) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50">
-        <Header studentInfo={null} onSettingsClick={() => setShowSettings(true)} />
-        <div className="p-6">
-          <div className="card text-center py-8">
-            <div className="mb-4">
-              <FileText size={48} className="mx-auto text-primary-400 mb-3" />
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Open AIMS Portal
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Please navigate to your Course History page on AIMS Portal
-              </p>
-              <a
-                href="https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary inline-block"
-              >
-                Open Course History
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (!isOnAIMS) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50">
+  //       <Header studentInfo={null} onSettingsClick={() => setShowSettings(true)} />
+  //       <div className="p-6">
+  //         <div className="card text-center py-8">
+  //           <div className="mb-4">
+  //             <FileText size={48} className="mx-auto text-primary-400 mb-3" />
+  //             <h3 className="text-lg font-semibold text-gray-800 mb-2">
+  //               Open AIMS Portal
+  //             </h3>
+  //             <p className="text-sm text-gray-600 mb-4">
+  //               Please navigate to your Course History page on AIMS Portal
+  //             </p>
+  //             <a
+  //               href="https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage"
+  //               target="_blank"
+  //               rel="noopener noreferrer"
+  //               className="btn-primary inline-block"
+  //             >
+  //               Open Course History
+  //             </a>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50">

@@ -10,66 +10,68 @@ export class CourseSelector {
   }
 
   inject() {
-    // Add checkboxes to each course row
-    const courseRows = document.querySelectorAll('.hierarchyLi.dataLi:not(.hierarchyHdr):not(.hierarchySubHdr)');
-    
+
+    const tryInject = () => {
+      const courseRows = document.querySelectorAll('.hierarchyLi.dataLi:not(.hierarchyHdr):not(.hierarchySubHdr)');
+      if (courseRows.length > 0) {
+        this._injectCourses(courseRows);
+        observer.disconnect();
+      }
+    };
+
+    tryInject();
+
+    const observer = new MutationObserver(() => {
+      tryInject();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+
+  _injectCourses(courseRows) {
     courseRows.forEach((row, index) => {
-      if (row.querySelector('.gpa-genie-checkbox')) return; // Already injected
-      
+      if (row.querySelector('.gpa-genie-checkbox')) return;
+
       const courseCode = row.querySelector('.col1')?.textContent.trim();
       const courseName = row.querySelector('.col2')?.textContent.trim();
       const credits = parseFloat(row.querySelector('.col3')?.textContent.trim()) || 0;
       const grade = row.querySelector('.col8')?.textContent.trim();
       const regType = row.querySelector('.col4')?.textContent.trim();
 
-      if (!courseCode || !grade) return; // Skip rows without data
+      if (!courseCode) return;
 
-      const course = {
-        code: courseCode,
-        title: courseName,
-        credits: credits,
-        grade: grade,
-        regType: regType,
-        index: index,
-      };
-
+      const course = { code: courseCode, title: courseName, credits, grade, regType, index };
       this.allCourses.push(course);
 
-      // Create checkbox
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.className = 'gpa-genie-checkbox';
       checkbox.dataset.courseIndex = index;
-      checkbox.checked = true; // Default selected
+      checkbox.checked = true;
       this.selectedCourses.add(index);
 
-      // Add change listener
       checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          this.selectedCourses.add(index);
-        } else {
-          this.selectedCourses.delete(index);
-        }
+        if (checkbox.checked) this.selectedCourses.add(index);
+        else this.selectedCourses.delete(index);
         this.updateInlineGPA();
       });
 
-      // Insert checkbox at the beginning of the first column
       const firstCol = row.querySelector('.col1');
-      if (firstCol) {
-        firstCol.insertBefore(checkbox, firstCol.firstChild);
-      }
+      if (firstCol) firstCol.insertBefore(checkbox, firstCol.firstChild);
     });
 
-    // Add semester GPAs to headers
     this.injectSemesterGPAs();
-
-    // Show initial GPA
     this.updateInlineGPA();
   }
 
+
   injectSemesterGPAs() {
     const semesterHeaders = document.querySelectorAll('.hierarchyHdr');
-    
+
     semesterHeaders.forEach(header => {
       const semesterName = header.querySelector('.col')?.textContent.trim();
       if (!semesterName) return;
@@ -79,9 +81,9 @@ export class CourseSelector {
       const semesterCourses = [];
 
       while (nextSibling && !nextSibling.classList.contains('hierarchyHdr')) {
-        if (nextSibling.classList.contains('dataLi') && 
-            !nextSibling.classList.contains('hierarchySubHdr')) {
-          
+        if (nextSibling.classList.contains('dataLi') &&
+          !nextSibling.classList.contains('hierarchySubHdr')) {
+
           const courseCode = nextSibling.querySelector('.col1')?.textContent.trim();
           const credits = parseFloat(nextSibling.querySelector('.col3')?.textContent.trim()) || 0;
           const grade = nextSibling.querySelector('.col8')?.textContent.trim();
@@ -102,12 +104,12 @@ export class CourseSelector {
       // Calculate semester GPA
       if (semesterCourses.length > 0) {
         const result = GPACalculator.calculateSemesterGPA({ courses: semesterCourses });
-        
+
         // Add GPA badge to header
         const gpaSpan = document.createElement('span');
         gpaSpan.className = 'gpa-genie-semester-gpa';
         gpaSpan.textContent = `SGPA: ${result.gpa.toFixed(2)}`;
-        
+
         const headerCol = header.querySelector('.col');
         if (headerCol && !headerCol.querySelector('.gpa-genie-semester-gpa')) {
           headerCol.appendChild(gpaSpan);
@@ -118,7 +120,7 @@ export class CourseSelector {
   }
 
   updateInlineGPA() {
-    const selected = this.allCourses.filter((_, index) => 
+    const selected = this.allCourses.filter((_, index) =>
       this.selectedCourses.has(index)
     );
 
@@ -132,7 +134,7 @@ export class CourseSelector {
   }
 
   getSelectedCourses() {
-    return this.allCourses.filter((_, index) => 
+    return this.allCourses.filter((_, index) =>
       this.selectedCourses.has(index)
     );
   }

@@ -10,7 +10,7 @@ export class InlineGPA {
     this.container.className = 'gpa-genie-inline-gpa';
     this.container.innerHTML = `
       <button class="close-btn">×</button>
-      <h4>Selected CGPA</h4>
+      <h4>CGPA (Selected Courses)</h4>
       <div class="gpa-value">${gpa.toFixed(2)}</div>
       <div class="gpa-subtitle">${credits} credits • ${courses} courses</div>
     `;

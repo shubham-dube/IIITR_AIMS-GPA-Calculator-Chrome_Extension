@@ -24,7 +24,7 @@ export class GPACalculationRules {
         const existingPoints = GRADE_POINTS[existingCourse.grade];
         const currentPoints = GRADE_POINTS[course.grade];
         
-        if (currentPoints !== null && (existingPoints === null || currentPoints > existingPoints)) {
+        if (currentPoints !== null && (existingPoints === null || currentPoints >= existingPoints)) {
           courseMap.set(course.code, course);
         }
       }

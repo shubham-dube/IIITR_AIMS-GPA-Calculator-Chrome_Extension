@@ -4,15 +4,15 @@ import { GraduationCap, Settings, User } from 'lucide-react';
 export default function Header({ studentInfo, onSettingsClick }) {
   return (
     <header className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white shadow-lg">
-      <div className="px-4 py-4">
-        <div className="flex items-center justify-between mb-3">
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
               <GraduationCap size={28} />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight">GPA Genie</h1>
-              <p className="text-xs text-primary-100">Professional CGPA Calculator</p>
+              <h1 className="text-lg font-bold tracking-tight">GPA Genie</h1>
+              <p className="text-xs text-primary-100">CGPA Calculator</p>
             </div>
           </div>
           
@@ -24,7 +24,7 @@ export default function Header({ studentInfo, onSettingsClick }) {
           </button>
         </div>
 
-        {studentInfo && (
+        {/* {studentInfo && (
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-white/20 rounded-full">
@@ -36,7 +36,7 @@ export default function Header({ studentInfo, onSettingsClick }) {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </header>
   );
