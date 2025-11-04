@@ -5,6 +5,7 @@ export class InlineGPA {
 
   show(gpa, credits, courses) {
     this.remove(); // Remove existing if any
+    return;
 
     this.container = document.createElement('div');
     this.container.className = 'gpa-genie-inline-gpa';

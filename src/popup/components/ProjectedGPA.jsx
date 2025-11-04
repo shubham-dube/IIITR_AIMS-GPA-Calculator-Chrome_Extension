@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Target, Plus, Trash2, Calculator, TrendingUp } from 'lucide-react';
+import { Target, Plus, Trash2, Calculator, TrendingUp, Zap, Save, BookOpen } from 'lucide-react';
 import { GPACalculator } from '@shared/utils/gpaCalculator';
 import { GRADE_POINTS } from '@shared/constants/gradeSystem';
+import { StorageManager } from '@shared/storage/storageManager';
 
-export default function ProjectedGPA({ semesters, currentGPA }) {
+export default function ProjectedGPA({ semesters }) {
   const [projectedCourses, setProjectedCourses] = useState([]);
+  const [currentGPA, setGPAResult] = useState(null);
   const [newCourse, setNewCourse] = useState({
     title: '',
     credits: '',
@@ -16,12 +18,29 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
     GRADE_POINTS[g] !== null && GRADE_POINTS[g] !== undefined
   );
 
+  useEffect(() => {
+    loadSavedProjection();
+    const result = GPACalculator.calculateCumulativeGPA(semesters);
+    setGPAResult(result);
+  }, []);
+
+  const loadSavedProjection = async () => {
+    const saved = await StorageManager.getProjectedGrades();
+    if (saved && saved.length > 0) {
+      setProjectedCourses(saved);
+    }
+  };
+
+  const saveProjection = async () => {
+    await StorageManager.saveProjectedGrades(projectedCourses);
+  };
+
   const handleAddCourse = () => {
-    if (!newCourse.title || !newCourse.credits) return;
+    if (!newCourse.credits) return;
 
     const course = {
       code: `PROJ-${Date.now()}`,
-      title: newCourse.title,
+      title: newCourse.title || `Projected Course ${projectedCourses.length + 1}`,
       credits: parseFloat(newCourse.credits),
       grade: newCourse.expectedGrade,
       regType: 'Projected',
@@ -34,6 +53,7 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
 
   const handleRemoveCourse = (index) => {
     setProjectedCourses(projectedCourses.filter((_, i) => i !== index));
+    // saveProjection();
   };
 
   const handleCalculate = () => {
@@ -41,6 +61,7 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
 
     const result = GPACalculator.projectGPA(semesters, projectedCourses);
     setProjectedResult(result);
+    // saveProjection();
   };
 
   const getGradeColor = (grade) => {
@@ -51,49 +72,32 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
     return 'text-orange-600';
   };
 
+  const totalProjectedCredits = projectedCourses.reduce((sum, c) => sum + c.credits, 0);
+
   return (
-    <div className="space-y-4 animate-fade-in">
-      {/* Info Card */}
-      <div className="card bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-purple-100 rounded-lg">
-            <Target size={20} className="text-purple-600" />
-          </div>
+    <div className="space-y-3 animate-fade-in">
+      {/* Info Banner */}
+      <div className="card p-2 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+        <div className="flex items-center gap-2">
+          <Target size={18} className="text-purple-600" />
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-800 mb-1">Project Your Future GPA</h3>
-            <p className="text-sm text-gray-600">
-              Add courses with expected grades to see how they'll impact your CGPA
-            </p>
+            <p className="text-xs font-semibold text-gray-800">Project Future GPA</p>
+            <p className="text-[10px] text-gray-600">Add expected courses to predict CGPA</p>
           </div>
         </div>
       </div>
 
       {/* Add Course Form */}
-      <div className="card">
-        <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-          <Plus size={18} className="text-primary-600" />
-          Add Projected Course
-        </h3>
-        
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Course Title
-            </label>
+      <div className="card p-2">
+          <div className="space-y-2">
             <input
               type="text"
               value={newCourse.title}
               onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-              placeholder="e.g., Advanced Algorithms"
-              className="input-field text-sm"
+              placeholder="Course title (optional)"
+              className="input-field"
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Credits
-              </label>
+            <div className="flex gap-2">
               <input
                 type="number"
                 step="0.5"
@@ -101,19 +105,13 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
                 max="10"
                 value={newCourse.credits}
                 onChange={(e) => setNewCourse({ ...newCourse, credits: e.target.value })}
-                placeholder="3.0"
-                className="input-field text-sm"
+                placeholder="Credits"
+                className="input-field flex-1"
               />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                Expected Grade
-              </label>
               <select
                 value={newCourse.expectedGrade}
                 onChange={(e) => setNewCourse({ ...newCourse, expectedGrade: e.target.value })}
-                className="input-field text-sm"
+                className="input-field flex-1"
               >
                 {availableGrades.map(grade => (
                   <option key={grade} value={grade}>
@@ -122,48 +120,53 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
                 ))}
               </select>
             </div>
+            <button
+              onClick={handleAddCourse}
+              disabled={!newCourse.credits}
+              className="w-full btn-primary py-1.5 text-xs disabled:opacity-50"
+            >
+              <Plus size={14} className="inline mr-1" />
+              Add Course
+            </button>
           </div>
-
-          <button
-            onClick={handleAddCourse}
-            disabled={!newCourse.title || !newCourse.credits}
-            className="w-full btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Plus size={16} className="inline mr-1.5" />
-            Add Course
-          </button>
-        </div>
       </div>
 
       {/* Projected Courses List */}
       {projectedCourses.length > 0 && (
-        <div className="card">
-          <h3 className="text-sm font-semibold text-gray-800 mb-3">
-            Projected Courses ({projectedCourses.length})
-          </h3>
+        <div className="card p-2">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-gray-800">
+              Projected Courses ({projectedCourses.length})
+            </span>
+            <span className="text-xs text-gray-600">
+              {totalProjectedCredits.toFixed(1)} credits
+            </span>
+          </div>
           
-          <div className="space-y-2 max-h-48 overflow-y-auto">
+          <div className="space-y-1 max-h-40 overflow-y-auto">
             {projectedCourses.map((course, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                className="flex items-center gap-2 p-1.5 bg-gray-50 rounded border border-gray-200"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">
-                    {course.title}
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    {course.credits} credits • Grade: 
-                    <span className={`font-semibold ml-1 ${getGradeColor(course.grade)}`}>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-xs font-bold ${getGradeColor(course.grade)}`}>
                       {course.grade}
                     </span>
-                  </p>
+                    <span className="text-[10px] text-gray-600">
+                      {course.credits} cr
+                    </span>
+                  </div>
+                  {course.title && course.title !== `Quick Add (${course.grade})` && (
+                    <p className="text-[10px] text-gray-600 truncate">{course.title}</p>
+                  )}
                 </div>
                 <button
                   onClick={() => handleRemoveCourse(index)}
-                  className="ml-2 p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                  className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={12} />
                 </button>
               </div>
             ))}
@@ -171,9 +174,9 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
 
           <button
             onClick={handleCalculate}
-            className="w-full btn-success mt-3"
+            className="w-full btn-success mt-2 py-1.5 text-xs"
           >
-            <Calculator size={16} className="inline mr-1.5" />
+            <Calculator size={14} className="inline mr-1" />
             Calculate Projected CGPA
           </button>
         </div>
@@ -181,41 +184,42 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
 
       {/* Projected Result */}
       {projectedResult && (
-        <div className="card bg-gradient-to-br from-success-50 to-green-50 border-2 border-success-300 animate-scale-in">
-          <div className="text-center mb-4">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-success-500 to-green-600 rounded-full shadow-lg mb-3">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">
-                  {projectedResult.gpa.toFixed(2)}
+        <div className="card p-3 bg-gradient-to-br from-success-50 to-green-50 border-2 border-success-300 animate-scale-in">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-success-500 to-green-600 rounded-full shadow-lg">
+                <div className="text-center">
+                  <div className="text-xl font-bold text-white leading-none">
+                    {projectedResult.gpa.toFixed(2)}
+                  </div>
+                  <div className="text-[9px] text-green-100">Projected</div>
                 </div>
-                <div className="text-xs text-green-100">Projected</div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-600">Current: {currentGPA.gpa.toFixed(2)}</div>
+                <div className={`text-sm font-bold flex items-center gap-1 ${
+                  projectedResult.gpa >= currentGPA.gpa ? 'text-success-700' : 'text-red-700'
+                }`}>
+                  {projectedResult.gpa >= currentGPA.gpa ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+                  {projectedResult.gpa >= currentGPA.gpa ? '+' : ''}
+                  {(projectedResult.gpa - currentGPA.gpa).toFixed(2)}
+                </div>
               </div>
             </div>
-            
-            {currentGPA && (
-              <div className="flex items-center justify-center gap-3 text-sm">
-                <div>
-                  <span className="text-gray-600">Current: </span>
-                  <span className="font-bold text-gray-800">{currentGPA.gpa.toFixed(2)}</span>
-                </div>
-                <div className="flex items-center gap-1 text-success-700">
-                  <TrendingUp size={16} />
-                  <span className="font-bold">
-                    +{(projectedResult.gpa - currentGPA.gpa).toFixed(2)}
-                  </span>
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white rounded-lg p-2 border border-success-200">
-              <p className="text-xs text-gray-600 mb-1">Total Credits</p>
-              <p className="text-lg font-bold text-gray-800">{projectedResult.totalCredits}</p>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-white rounded p-1.5 text-center border border-success-200">
+              <p className="text-[10px] text-gray-600">Total Credits</p>
+              <p className="text-sm font-bold text-gray-800">{projectedResult.totalCredits}</p>
             </div>
-            <div className="bg-white rounded-lg p-2 border border-success-200">
-              <p className="text-xs text-gray-600 mb-1">Courses</p>
-              <p className="text-lg font-bold text-gray-800">{projectedResult.courseCount}</p>
+            <div className="bg-white rounded p-1.5 text-center border border-success-200">
+              <p className="text-[10px] text-gray-600">Courses</p>
+              <p className="text-sm font-bold text-gray-800">{projectedResult.courseCount}</p>
+            </div>
+            <div className="bg-white rounded p-1.5 text-center border border-success-200">
+              <p className="text-[10px] text-gray-600">New Courses</p>
+              <p className="text-sm font-bold text-gray-800">{projectedCourses.length}</p>
             </div>
           </div>
         </div>
@@ -223,10 +227,9 @@ export default function ProjectedGPA({ semesters, currentGPA }) {
 
       {/* Tips */}
       {projectedCourses.length === 0 && (
-        <div className="card bg-blue-50 border-blue-200">
-          <p className="text-sm text-blue-800">
-            💡 <strong>Tip:</strong> Add courses you plan to take with your target grades 
-            to see how they'll affect your overall CGPA.
+        <div className="card p-2 bg-blue-50 border-blue-200">
+          <p className="text-xs text-blue-800">
+            <strong>💡 Tip:</strong> Use this feature to pridict future CGPA or calculate GPA with your course data.
           </p>
         </div>
       )}

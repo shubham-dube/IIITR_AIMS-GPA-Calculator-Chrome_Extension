@@ -6,10 +6,19 @@ export function useGPACalculator(semesters) {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [gpaResult, setGpaResult] = useState(null);
   const [savedCalculations, setSavedCalculations] = useState([]);
+  const [studentInfo, setStudentInfo] = useState(null);
 
   useEffect(() => {
     loadSavedCalculations();
+    loadStudentInfo();
   }, []);
+
+  const loadStudentInfo = async () => {
+    const result = await chrome.storage.local.get(STORAGE_KEYS.STUDENT_DATA);
+    if (result[STORAGE_KEYS.STUDENT_DATA]) {
+      setStudentInfo(result[STORAGE_KEYS.STUDENT_DATA]);
+    }
+  };
 
   const loadSavedCalculations = async () => {
     const result = await chrome.storage.local.get(STORAGE_KEYS.SAVED_CALCULATIONS);
@@ -21,7 +30,6 @@ export function useGPACalculator(semesters) {
   const calculateGPA = (courses, fromPage = false) => {
     if (!courses || courses.length === 0) return null;
     
-    // Create a mock semester structure for calculation
     const mockSemester = { courses: courses };
     const result = GPACalculator.calculateSemesterGPA(mockSemester);
     setGpaResult(result);
@@ -39,6 +47,7 @@ export function useGPACalculator(semesters) {
       timestamp: new Date().toISOString(),
       courses: selectedCourses,
       result,
+      student: studentInfo,
     };
 
     const updated = [calculation, ...savedCalculations].slice(0, 20);

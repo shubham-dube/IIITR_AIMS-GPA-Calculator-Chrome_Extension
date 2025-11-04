@@ -196,10 +196,7 @@ export default function App() {
             )}
 
             {activeTab === 'projected' && (
-              <ProjectedGPA 
-                semesters={semesters}
-                currentGPA={gpaResult}
-              />
+              <ProjectedGPA  semesters={semesters} />
             )}
 
             {activeTab === 'saved' && (

@@ -60,6 +60,13 @@ module.exports = {
         { from: 'public/icons', to: 'icons' },
       ],
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'manifest.json', to: 'manifest.json' },
+        { from: 'public/icons', to: 'icons' },
+        { from: 'src/content/styles/content.css', to: 'content.css' },
+      ],
+    }),
   ],
   resolve: {
     extensions: ['.js', '.jsx'],

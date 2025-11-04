@@ -3,12 +3,195 @@
   accent-color: #0ea5e9;
   cursor: pointer;
   transform: scale(1.1);
+  margin-right: 8px;
 }
 
 .gpa-genie-checkbox:hover {
   transform: scale(1.2);
 }
 
+/* Semester GPA Display Container */
+.gpa-genie-gpa-container {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: 16px;
+  flex-wrap: wrap;
+}
+
+.gpa-genie-semester-gpa {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gpa-genie-sgpa {
+  background: #0ea5e9;
+  color: white;
+}
+
+.gpa-genie-cgpa {
+  background: #8b5cf6;
+  color: white;
+}
+
+/* Semester Selector Button */
+.gpa-genie-semester-selector {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 4px 10px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gpa-genie-semester-selector:hover {
+  background: #16a34a;
+  transform: scale(1.05);
+}
+
+.gpa-genie-semester-selector:active {
+  transform: scale(0.95);
+}
+
+/* Overall CGPA Display */
+.gpa-genie-overall-cgpa {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Settings Panel */
+.gpa-genie-settings-panel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.gpa-genie-settings-toggle {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gpa-genie-settings-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.gpa-genie-settings-content {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  min-width: 280px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gpa-genie-settings-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.gpa-genie-settings-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gpa-genie-settings-option:hover {
+  background: #f8fafc;
+  padding-left: 8px;
+  margin-left: -8px;
+  border-radius: 6px;
+}
+
+.gpa-genie-settings-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #0ea5e9;
+}
+
+.gpa-genie-settings-option span {
+  font-size: 13px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.gpa-genie-settings-apply {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gpa-genie-settings-apply:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.gpa-genie-settings-apply:active {
+  transform: translateY(0);
+}
+
+/* Inline GPA Display */
 .gpa-genie-inline-gpa {
   position: fixed;
   bottom: 20px;
@@ -20,7 +203,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   z-index: 10000;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  min-width: 200px;
+  min-width: 220px;
   animation: slideInUp 0.3s ease-out;
 }
 
@@ -37,13 +220,15 @@
 
 .gpa-genie-inline-gpa h4 {
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .gpa-genie-inline-gpa .gpa-value {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
   margin: 0;
   line-height: 1;
@@ -51,8 +236,8 @@
 
 .gpa-genie-inline-gpa .gpa-subtitle {
   font-size: 11px;
-  opacity: 0.8;
-  margin-top: 4px;
+  opacity: 0.85;
+  margin-top: 6px;
 }
 
 .gpa-genie-inline-gpa .close-btn {
@@ -71,34 +256,34 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+  font-weight: bold;
 }
 
 .gpa-genie-inline-gpa .close-btn:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Semester Header Enhancement */
+/* Enhanced Semester Headers */
 .hierarchyHdr.gpa-genie-enhanced {
   background: linear-gradient(to right, #f3f4f6, #e5e7eb) !important;
   border-left: 4px solid #0ea5e9 !important;
   padding-left: 12px !important;
+  transition: all 0.2s;
 }
 
-.gpa-genie-semester-gpa {
-  display: inline-block;
-  margin-left: 16px;
-  padding: 4px 12px;
-  background: #0ea5e9;
-  color: white;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+.hierarchyHdr.gpa-genie-enhanced:hover {
+  background: linear-gradient(to right, #e5e7eb, #d1d5db) !important;
 }
 
 /* Course Row Highlight */
 .hierarchyLi.dataLi:has(.gpa-genie-checkbox:checked) {
   background-color: #eff6ff !important;
   border-left: 3px solid #0ea5e9 !important;
+  transition: all 0.2s;
+}
+
+.hierarchyLi.dataLi:hover {
+  background-color: #f8fafc !important;
 }
 
 /* Loading Indicator */
@@ -127,4 +312,227 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .gpa-genie-settings-panel {
+    top: 60px;
+    right: 10px;
+  }
+
+  .gpa-genie-inline-gpa {
+    bottom: 10px;
+    right: 10px;
+    min-width: 180px;
+    padding: 12px 16px;
+  }
+
+  .gpa-genie-inline-gpa .gpa-value {
+    font-size: 28px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .gpa-genie-checkbox,
+  .gpa-genie-settings-panel,
+  .gpa-genie-inline-gpa,
+  .gpa-genie-semester-selector {
+    display: none !important;
+  }
+}
+
+/* Compact Semester Card Styles */
+.gpa-genie-semester-card {
+  margin: 12px 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(131, 115, 205, 0.12);
+  background: white;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(131, 115, 205, 0.15);
+}
+
+.gpa-genie-semester-card:hover {
+  box-shadow: 0 2px 8px rgba(131, 115, 205, 0.2);
+  border-color: rgba(131, 115, 205, 0.3);
+}
+
+.gpa-genie-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #8373cd 0%, #9b8dd9 100%);
+  gap: 12px;
+}
+
+.gpa-genie-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.gpa-genie-semester-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gpa-genie-semester-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gpa-genie-semester-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gpa-genie-academic-year {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.gpa-genie-card-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.gpa-genie-stat-item {
+  text-align: center;
+  min-width: 48px;
+}
+
+.gpa-genie-stat-secondary {
+  opacity: 0.9;
+}
+
+.gpa-genie-stat-label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.gpa-genie-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.gpa-genie-card-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.gpa-genie-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.gpa-genie-action-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.gpa-genie-action-btn:active {
+  transform: translateY(0);
+}
+
+.gpa-genie-select-btn,
+.gpa-genie-collapse-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.gpa-genie-select-btn:hover,
+.gpa-genie-collapse-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.gpa-genie-select-btn.selected {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+  color: white;
+}
+
+.gpa-genie-select-btn svg,
+.gpa-genie-collapse-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.gpa-genie-collapse-btn svg {
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .gpa-genie-card-header {
+    flex-wrap: wrap;
+    padding: 8px 12px;
+  }
+  
+  .gpa-genie-header-left {
+    flex-basis: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .gpa-genie-card-stats {
+    gap: 12px;
+  }
+  
+  .gpa-genie-stat-item {
+    min-width: 40px;
+  }
+  
+  .gpa-genie-stat-value {
+    font-size: 14px;
+  }
 }
