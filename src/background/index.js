@@ -35,11 +35,21 @@ async function handleOpenTranscript(data) {
   try {
     console.log('Opening transcript with data:', data);
     
+    // Enhance courses with semester information
+    const enhancedCourses = data.result?.courses?.map(course => ({
+      ...course,
+      semesterId: course.semesterId || 'Unknown',
+      semesterName: course.semesterName || course.semesterId || 'Unknown Semester',
+      regType: course.regType || 'Regular'
+    })) || [];
+
     // Store transcript data
     transcriptData = {
       student: data.student,
-      semesters: data.semesters || [],
-      result: data.result,
+      result: {
+        ...data.result,
+        courses: enhancedCourses
+      },
       generatedAt: new Date().toISOString(),
     };
 

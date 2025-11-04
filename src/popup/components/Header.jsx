@@ -8,7 +8,7 @@ export default function Header({ studentInfo, onSettingsClick }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-              <GraduationCap size={28} />
+              <img src={chrome.runtime.getURL('icons/icon16.png')} alt="GPA Genie" className="w-8 h-8" />
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight">GPA Genie</h1>
@@ -16,12 +16,12 @@ export default function Header({ studentInfo, onSettingsClick }) {
             </div>
           </div>
           
-          <button
+          {/* <button
             onClick={onSettingsClick}
             className="p-2 hover:bg-white/10 rounded-lg transition-colors"
           >
             <Settings size={20} />
-          </button>
+          </button> */}
         </div>
 
         {/* {studentInfo && (

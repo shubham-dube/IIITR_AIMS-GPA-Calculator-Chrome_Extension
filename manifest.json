@@ -6,7 +6,9 @@
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "tabs", 
+    "contextMenus"
   ],
   "host_permissions": [
     "https://aims.iiitr.ac.in/*"

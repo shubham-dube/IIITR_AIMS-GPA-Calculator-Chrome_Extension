@@ -1,58 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Printer, FileText, Loader } from 'lucide-react';
+import { Download, Printer, FileText } from 'lucide-react';
 import OfficialTemplate from './templates/OfficialTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';
 
+  
 export default function Transcript() {
   const [data, setData] = useState(null);
-  const [template, setTemplate] = useState('official');
-  const [loading, setLoading] = useState(true);
+  const [template, setTemplate] = useState('Detailed');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log('Transcript component mounted');
-    
-    // Listen for data from background
-    const messageListener = (request, sender, sendResponse) => {
-      console.log('Transcript received message:', request.type);
+    // Receive data from background script
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.type === 'TRANSCRIPT_DATA') {
-        console.log('Received transcript data:', request.data);
         setData(request.data);
         setLoading(false);
-        sendResponse({ success: true });
       }
-    };
-    
-    chrome.runtime.onMessage.addListener(messageListener);
+    });
 
-    // Request data from background
-    setTimeout(() => {
-      console.log('Requesting transcript data');
-      chrome.runtime.sendMessage({ type: 'GET_TRANSCRIPT_DATA' }, (response) => {
-        if (response && response.data) {
-          console.log('Got transcript data from background:', response.data);
-          setData(response.data);
-          setLoading(false);
-        } else {
-          console.log('No data received, waiting for message...');
-          setTimeout(() => {
-            if (!data) {
-              setLoading(false);
-            }
-          }, 3000);
-        }
-      });
-    }, 100);
-
-    return () => {
-      chrome.runtime.onMessage.removeListener(messageListener);
-    };
+    // Request data
+    chrome.runtime.sendMessage({ type: 'GET_TRANSCRIPT_DATA' });
   }, []);
 
   const handlePrint = () => {
-    window.print();
-  };
-
-  const handleDownloadPDF = () => {
     window.print();
   };
 
@@ -60,7 +30,7 @@ export default function Transcript() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
-          <Loader className="animate-spin h-12 w-12 text-primary-600 mx-auto mb-4" />
+          <Loader className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading transcript...</p>
         </div>
       </div>
@@ -80,18 +50,18 @@ export default function Transcript() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
+    <div className="min-h-screen bg-gray-100 py-6">
       {/* Controls */}
-      <div className="max-w-5xl mx-auto mb-6 no-print px-4">
-        <div className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <div className="max-w-4xl mx-auto mb-4 px-4 no-print">
+        <div className="bg-white rounded-lg shadow p-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <label className="text-sm font-medium text-gray-700">Template:</label>
             <select
               value={template}
               onChange={(e) => setTemplate(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
             >
-              <option value="official">Official</option>
+              <option value="Detailed">Detailed</option>
               <option value="minimal">Minimal</option>
             </select>
           </div>
@@ -99,27 +69,35 @@ export default function Transcript() {
           <div className="flex gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
-              <Printer size={18} />
+              <Printer size={16} />
               Print
             </button>
             <button
-              onClick={handleDownloadPDF}
-              className="flex items-center gap-2 px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-700 transition-colors"
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
             >
-              <Download size={18} />
-              Save as PDF
+              <Download size={16} />
+              Export PDF
             </button>
           </div>
         </div>
       </div>
 
       {/* Transcript Content */}
-      <div className="max-w-5xl mx-auto px-4">
-        {template === 'official' && <OfficialTemplate data={data} />}
+      <div id="transcript-content" className="max-w-4xl mx-auto px-4">
+        {template === 'Detailed' && <OfficialTemplate data={data} />}
         {template === 'minimal' && <MinimalTemplate data={data} />}
       </div>
+
+      <style>{`
+        @media print {
+          body { margin: 0; padding: 0; }
+          .no-print { display: none !important; }
+          #transcript-content { padding: 0; margin: 0; }
+        }
+      `}</style>
     </div>
   );
 }

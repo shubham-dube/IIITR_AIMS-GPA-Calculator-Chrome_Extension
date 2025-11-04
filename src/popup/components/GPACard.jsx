@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Save, FileText, CheckCircle } from 'lucide-react';
 
-export default function GPACard({ result, onSave, onViewTranscript, studentInfo, selectedSemesters }) {
+export default function GPACard({ result, onSave, studentInfo, selectedCourses }) {
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
@@ -11,12 +11,21 @@ export default function GPACard({ result, onSave, onViewTranscript, studentInfo,
   };
 
   const handleTranscript = () => {
+    // Enhance courses with semester information
+    const enhancedCourses = (result?.courses || selectedCourses || []).map(course => ({
+      ...course,
+      semesterId: course.semesterId || 'Unknown',
+      semesterName: course.semesterName || course.semesterId || 'All Courses'
+    }));
+
     chrome.runtime.sendMessage({
       type: 'OPEN_TRANSCRIPT',
       data: {
         student: studentInfo,
-        semesters: selectedSemesters,
-        result: result,
+        result: {
+          ...result,
+          courses: enhancedCourses
+        },
       },
     });
   };
