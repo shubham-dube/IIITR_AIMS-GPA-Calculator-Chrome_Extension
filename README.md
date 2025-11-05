@@ -10,7 +10,6 @@ A modern, feature-rich Chrome extension for calculating CGPA, projecting grades,
 - 📈 **Analytics Dashboard**: Visualize semester-wise performance with charts and trends
 - 📄 **Professional Transcripts**: Generate official-looking transcripts with multiple templates
 - 💾 **Save Calculations**: Store and reload previous GPA calculations
-- ⚙️ **Customizable Settings**: Configure decimal places, default views, and more
 
 ### Intelligent Calculation Rules
 - ✅ Handles duplicate courses (best grade considered)
@@ -32,8 +31,8 @@ A modern, feature-rich Chrome extension for calculating CGPA, projecting grades,
 
 1. **Clone the repository**
 ```bash
-   git clone https://github.com/yourusername/gpa-genie.git
-   cd gpa-genie
+   git clone https://github.com/shubham-dube/GPA_Genie.git
+   cd GPA_Genie
 ```
 
 2. **Install dependencies**
@@ -175,18 +174,12 @@ The production-ready extension will be in the `dist/` folder.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- IIIT Raichur for the AIMS portal
-- React and Tailwind CSS teams
-- All contributors and users
-
 ## 📧 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+Shubham Dubey - [@Portfolio](https://shubhamdube.in)
 
-Project Link: [https://github.com/yourusername/gpa-genie](https://github.com/yourusername/gpa-genie)
+Project Link: [https://github.com/shubham-dube/GPA_Genie](https://github.com/shubham-dube/GPA_Genie)
 
 ---
 
-Made with ❤️ for IIIT Raichur students
+Made with ❤️ for IIT hyderabad and IIIT Raichur, Dharwad and Kurnool students
