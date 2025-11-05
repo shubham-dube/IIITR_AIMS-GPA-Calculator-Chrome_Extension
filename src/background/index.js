@@ -5,7 +5,7 @@ import { TabService } from './services/tabService';
 let transcriptData = null;
 
 chrome.runtime.onInstalled.addListener((details) => {
-  console.log('GPA Genie installed:', details.reason);
+  // console.log('GPA Genie installed:', details.reason);
   
   if (details.reason === 'install') {
     StorageService.initializeSettings();
@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Background received message:', request.type);
+  // console.log('Background received message:', request.type);
 
   if (request.type === MESSAGE_TYPES.OPEN_TRANSCRIPT || request.type === 'OPEN_TRANSCRIPT') {
     handleOpenTranscript(request.data);
@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function handleOpenTranscript(data) {
   try {
-    console.log('Opening transcript with data:', data);
+    // console.log('Opening transcript with data:', data);
     
     // Enhance courses with semester information
     const enhancedCourses = data.result?.courses?.map(course => ({
@@ -58,12 +58,12 @@ async function handleOpenTranscript(data) {
       url: chrome.runtime.getURL('transcript.html'),
     });
     
-    console.log('Transcript tab opened:', tab.id);
+    // console.log('Transcript tab opened:', tab.id);
     
     // Wait for tab to load and send data
     const sendDataToTab = (tabId, changeInfo) => {
       if (tabId === tab.id && changeInfo.status === 'complete') {
-        console.log('Tab loaded, sending data');
+        // console.log('Tab loaded, sending data');
         chrome.tabs.sendMessage(tabId, {
           type: 'TRANSCRIPT_DATA',
           data: transcriptData,
@@ -93,4 +93,4 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
-console.log('GPA Genie Background Service Worker Started');
+// console.log('GPA Genie Background Service Worker Started');

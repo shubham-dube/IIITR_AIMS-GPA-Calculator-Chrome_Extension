@@ -97,4 +97,4 @@ if (window.location.href.includes('myCrsHistoryPage')) {
   }, 2000);
 }
 
-console.log('GPA Genie Content Script Loaded');
+// console.log('GPA Genie Content Script Loaded');
