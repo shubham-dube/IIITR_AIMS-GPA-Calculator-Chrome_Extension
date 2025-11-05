@@ -13,7 +13,7 @@ export function useSemesters() {
     // Check if on AIMS portal
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]?.url || '';
-      setIsOnAIMS(url.includes('aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage'));
+      setIsOnAIMS(url.includes('CrsHistory'));
     });
 
     // Load cached data

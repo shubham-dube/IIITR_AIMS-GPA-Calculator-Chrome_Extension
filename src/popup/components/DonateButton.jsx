@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Coffee, X, Copy, Check, ExternalLink } from 'lucide-react';
+import { Heart, X, Copy, Check } from 'lucide-react';
 
 export default function DonateButton() {
   const [showModal, setShowModal] = useState(false);
@@ -19,129 +19,130 @@ export default function DonateButton() {
   };
 
   const handleUPIPayment = (amount) => {
-    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(recipientName)}&am=${amount}&cu=INR&tn=${encodeURIComponent('Support GPA Calculator Extension')}`;
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(recipientName)}&am=${amount}&cu=INR&tn=${encodeURIComponent('Support GPA Calculator')}`;
     window.open(upiUrl, '_blank');
   };
 
-  const donationAmounts = [
-    { amount: 20, label: '☕ Coffee', description: 'Buy me a coffee' },
-    { amount: 50, label: '🍕 Pizza', description: 'Buy me a pizza slice' },
-    { amount: 100, label: '🍔 Burger', description: 'Buy me a burger' },
-    { amount: 0, label: '💝 Custom', description: 'Choose your amount' }
-  ];
-
   return (
     <>
-      {/* Floating Donate Button */}
+      {/* Compact Floating Button */}
       <button
         onClick={() => setShowModal(true)}
-        className="fixed bottom-4 right-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 z-50 group"
-        title="Support the developer"
+        className="fixed bottom-3 right-3 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 z-50 group"
+        title="Support the developer ❤️"
       >
-        <Heart size={20} className="group-hover:animate-pulse" fill="currentColor" />
+        <Heart size={16} className="group-hover:animate-pulse" fill="currentColor" />
       </button>
 
-      {/* Donation Modal */}
+      {/* Compact Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-6 rounded-t-2xl relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 animate-fade-in">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-xs">
+            {/* Compact Header */}
+            <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-3 rounded-t-xl relative">
               <button
                 onClick={() => setShowModal(false)}
-                className="absolute top-4 right-4 text-white hover:bg-white hover:bg-opacity-20 rounded-full p-1 transition-all"
+                className="absolute top-2 right-2 text-white hover:bg-white hover:bg-opacity-20 rounded-full p-1 transition-all"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
               <div className="text-center text-white">
-                <Coffee size={48} className="mx-auto mb-3" />
-                <h2 className="text-2xl font-bold mb-2">Support My Work</h2>
-                <p className="text-pink-100 text-sm">
-                  Help keep this extension free and updated! ☕
+                <Heart size={24} className="mx-auto mb-1" fill="currentColor" />
+                <h2 className="text-base font-bold">Support My Work</h2>
+                <p className="text-pink-100 text-[10px] mt-0.5">
+                  Keep this extension free ☕
                 </p>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-6 space-y-6">
-              {/* Quick Donation Amounts */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">
-                  Quick Donation
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {donationAmounts.map((item, index) => (
-                    <button
-                      key={index}
-                      onClick={() => item.amount > 0 && handleUPIPayment(item.amount)}
-                      className="bg-gradient-to-br from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 border-2 border-pink-200 hover:border-pink-300 rounded-xl p-4 transition-all transform hover:scale-105 text-left group"
+            {/* Compact Content */}
+            <div className="p-3 space-y-3">
+              {/* QR Code Section */}
+              <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg p-3 border border-pink-200">
+                <div className="flex items-center gap-3">
+                  {/* QR Code */}
+                  <div className="flex-shrink-0 bg-white rounded-lg p-2 border-2 border-pink-300">
+                    <img 
+                      src={chrome.runtime.getURL('icons/qr-code.jpg')}
+                      alt="UPI QR Code"
+                      className="w-24 h-24"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div 
+                      className="w-24 h-24 bg-gray-100 rounded items-center justify-center text-xs text-gray-500 text-center p-2"
+                      style={{ display: 'none' }}
                     >
-                      <div className="text-2xl mb-1">{item.label}</div>
-                      <div className="text-xs text-gray-600">{item.description}</div>
-                      {item.amount > 0 && (
-                        <div className="text-lg font-bold text-pink-600 mt-1">
-                          ₹{item.amount}
-                        </div>
-                      )}
+                      QR Code<br/>Not Found
+                    </div>
+                  </div>
+                  
+                  {/* Instructions */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-gray-800 mb-1">
+                      Scan with any UPI app
+                    </p>
+                    <p className="text-[10px] text-gray-600 leading-relaxed">
+                      GPay, PhonePe, Paytm, or any UPI app
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Amount Buttons */}
+              <div>
+                <p className="text-[10px] text-gray-600 mb-2 text-center">Or buy me a</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { amount: 20, label: '☕ Coffee', emoji: '☕' },
+                    { amount: 50, label: '🍕 Pizza', emoji: '🍕' },
+                    { amount: 100, label: '🍔 Burger', emoji: '🍔' }
+                  ].map((item) => (
+                    <button
+                      key={item.amount}
+                      onClick={() => handleUPIPayment(item.amount)}
+                      className="bg-white hover:bg-pink-50 border border-pink-200 hover:border-pink-300 rounded-lg py-2 px-2 transition-all transform hover:scale-105 active:scale-95"
+                    >
+                      <div className="text-lg leading-none mb-0.5">{item.emoji}</div>
+                      <div className="text-[10px] font-semibold text-pink-600">₹{item.amount}</div>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* UPI Details */}
-              <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-                <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                  <span className="bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                    UPI
-                  </span>
-                  Pay with UPI
-                </h3>
-                
-                <div className="space-y-2">
-                  <div className="bg-white rounded-lg p-3 border border-gray-200">
-                    <div className="text-xs text-gray-500 mb-1">UPI ID</div>
-                    <div className="flex items-center justify-between">
-                      <code className="text-sm font-mono font-semibold text-gray-800">
-                        {upiId}
-                      </code>
-                      <button
-                        onClick={handleCopyUPI}
-                        className="ml-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                        title="Copy UPI ID"
-                      >
-                        {copied ? (
-                          <Check size={16} className="text-green-600" />
-                        ) : (
-                          <Copy size={16} className="text-gray-600" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg p-3 border border-gray-200">
-                    <div className="text-xs text-gray-500 mb-1">Name</div>
-                    <div className="text-sm font-semibold text-gray-800">
-                      {recipientName}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2 text-xs text-gray-600 bg-blue-50 p-3 rounded-lg">
-                  <span className="text-blue-600">💡</span>
-                  <p>
-                    You can use any UPI app (GPay, PhonePe, Paytm, etc.) to scan or pay using the UPI ID above.
-                  </p>
+              {/* UPI ID */}
+              <div className="bg-gray-50 rounded-lg p-2">
+                <div className="text-[10px] text-gray-500 mb-1">UPI ID</div>
+                <div className="flex items-center justify-between gap-2">
+                  <code className="text-xs font-mono font-semibold text-gray-800 truncate">
+                    {upiId}
+                  </code>
+                  <button
+                    onClick={handleCopyUPI}
+                    className="flex-shrink-0 p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    title="Copy UPI ID"
+                  >
+                    {copied ? (
+                      <Check size={14} className="text-green-600" />
+                    ) : (
+                      <Copy size={14} className="text-gray-600" />
+                    )}
+                  </button>
                 </div>
               </div>
 
-              {/* Thank You Message */}
-              <div className="text-center bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-4 border border-pink-100">
-                <p className="text-sm text-gray-700 font-medium mb-1">
+              {/* Thank You */}
+              <div className="text-center bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-2 border border-pink-100">
+                <p className="text-xs text-gray-700 font-medium">
                   💖 Thank you for your support!
                 </p>
-                <p className="text-xs text-gray-600">
-                  Every contribution helps me maintain and improve this extension.
-                </p>
+              </div>
+
+              {/* Developer Info */}
+              <div className="text-center text-[10px] text-gray-500">
+                Made with ❤️ by {recipientName}
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Target, Plus, Trash2, Calculator, TrendingUp, Zap, Save, BookOpen } from 'lucide-react';
+import { Target, Plus, Trash2, Calculator, TrendingUp, TrendingDown, Zap, Save, BookOpen } from 'lucide-react';
 import { GPACalculator } from '@shared/utils/gpaCalculator';
 import { GRADE_POINTS } from '@shared/constants/gradeSystem';
 import { StorageManager } from '@shared/storage/storageManager';

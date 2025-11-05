@@ -209,7 +209,7 @@ export default function OfficialTemplate({ data }) {
       </div>
 
       {/* Compact Grading System */}
-      <div className="bg-gray-50 p-3 rounded mb-4 border border-gray-200">
+      {/* <div className="bg-gray-50 p-3 rounded mb-4 border border-gray-200">
         <h3 className="text-xs font-semibold text-gray-800 mb-2">Grading System (10-Point Scale)</h3>
         <div className="grid grid-cols-5 gap-x-4 gap-y-1 text-xs">
           {Object.entries(GRADE_POINTS).filter(([_, pts]) => pts !== null).map(([grade, points]) => (
@@ -219,7 +219,7 @@ export default function OfficialTemplate({ data }) {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Compact Footer */}
       <div className="flex justify-between items-center pt-3 border-t text-xs text-gray-600">

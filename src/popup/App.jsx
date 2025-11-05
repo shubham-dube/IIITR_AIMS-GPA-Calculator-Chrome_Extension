@@ -10,6 +10,8 @@ import SettingsPanel from './components/SettingsPanel';
 import { useSemesters } from './hooks/useSemesters';
 import { useGPACalculator } from './hooks/useGPACalculator';
 import DonateButton from './components/DonateButton';
+import FeedbackWidget from './components/FeedbackWidget';
+import InfoBanner from './components/InfoBanner';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('calculator');
@@ -146,6 +148,7 @@ export default function App() {
           <>
             {activeTab === 'calculator' && (
               <div className="space-y-3 animate-fade-in">
+                <InfoBanner />
                 {gpaResult && (
                   <GPACard
                     result={gpaResult}
@@ -214,6 +217,7 @@ export default function App() {
       </div>
 
       <DonateButton />
+      <FeedbackWidget />
 
       {showSettings && (
         <SettingsPanel onClose={() => setShowSettings(false)} />
