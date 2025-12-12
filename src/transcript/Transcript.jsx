@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Download, Printer, FileText } from 'lucide-react';
 import OfficialTemplate from './templates/OfficialTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';
+import OfficialTemplateV2 from './templates/OfficialTemplateV2';
 
   
 export default function Transcript() {
@@ -62,6 +63,7 @@ export default function Transcript() {
               className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
             >
               <option value="Detailed">Detailed</option>
+              {/* <option value="Official">Official with Stamp & Signature</option> */}
               <option value="minimal">Minimal</option>
             </select>
           </div>
@@ -89,6 +91,7 @@ export default function Transcript() {
       <div id="transcript-content" className="max-w-4xl mx-auto px-4">
         {template === 'Detailed' && <OfficialTemplate data={data} />}
         {template === 'minimal' && <MinimalTemplate data={data} />}
+        {template === 'Official' && <OfficialTemplateV2 data={data} />}
       </div>
 
       <style>{`
