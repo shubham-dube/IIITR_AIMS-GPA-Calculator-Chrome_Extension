@@ -1,56 +1,68 @@
-import React, { useState } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, TrendingDown, Award, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { 
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
+  Tooltip, ResponsiveContainer, PieChart, Pie, Cell 
+} from 'recharts';
+import { 
+  TrendingUp, Award, BookOpen, ChevronDown, ChevronUp 
+} from 'lucide-react';
+
+/**
+ * IMPORT PATHS:
+ * Reverting to the path mapping provided in the original UI snippet to resolve compilation errors.
+ */
 import { GPACalculator } from '@shared/utils/gpaCalculator';
 
-
-export default function Analytics({ semesters }) {
-  // Changed to object to track multiple sections independently
+export default function Analytics({ semesters = [] }) {
+  // Changed to object to track multiple sections independently as per requested UI
   const [expandedSections, setExpandedSections] = useState({
     trend: true,
     grades: true,
     credits: false,
     semesters: false
   });
-  
-  const breakdown = GPACalculator.getGPABreakdown(semesters);
-  
-  // Prepare data
-  const trendData = breakdown.map((sem, index) => ({
-    name: `Sem ${breakdown.length - index}`,
-    gpa: sem.gpa,
-    credits: sem.totalCredits,
-  })).reverse();
 
-  // Grade distribution
-  const gradeDistribution = {};
-  semesters.forEach(sem => {
-    sem.courses.forEach(course => {
-      if (course.grade && course.grade.trim()) {
-        gradeDistribution[course.grade] = (gradeDistribution[course.grade] || 0) + 1;
-      }
+  // PRESERVED LOGIC: Calculate Semester Breakdown using original utility methods
+  const breakdownData = useMemo(() => {
+    const data = (semesters || []).map((sem, idx) => {
+      const stats = GPACalculator.calculateSemesterGPA(sem);
+      return {
+        semester: sem.name || sem.semesterName || `Sem ${idx + 1}`,
+        name: `Sem ${idx + 1}`, // Used for chart axis
+        gpa: stats.gpa,
+        totalCredits: stats.totalCredits,
+        courseCount: stats.courseCount,
+      };
     });
-  });
+    return data;
+  }, [semesters]);
 
+  // PRESERVED LOGIC: Prepare Grade Distribution
+  const gradeData = useMemo(() => {
+    const distribution = {};
+    (semesters || []).forEach(sem => {
+      (sem.courses || []).forEach(course => {
+        if (course.grade && course.grade.trim()) {
+          distribution[course.grade] = (distribution[course.grade] || 0) + 1;
+        }
+      });
+    });
+    return Object.entries(distribution)
+      .map(([grade, count]) => ({ grade, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [semesters]);
 
-  const gradeData = Object.entries(gradeDistribution)
-    .map(([grade, count]) => ({ grade, count }))
-    .sort((a, b) => b.count - a.count);
+  // PRESERVED LOGIC: Overall Statistics
+  const cgpaStats = useMemo(() => {
+    if (!semesters || semesters.length === 0) {
+      return { gpa: 0, totalCredits: 0, earnedCredits: 0, courseCount: 0 };
+    }
+    return GPACalculator.calculateCumulativeGPA(semesters);
+  }, [semesters]);
 
-
+  // UI COLORS from snippet
   const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
-
-  // Statistics
-  const allGPAs = breakdown.map(b => b.gpa);
-  const avgGPA = allGPAs.reduce((a, b) => a + b, 0) / allGPAs.length;
-  const maxGPA = Math.max(...allGPAs);
-  const minGPA = Math.min(...allGPAs);
-  const totalCredits = breakdown.reduce((sum, b) => sum + b.totalCredits, 0);
-  const trend = allGPAs.length > 1 ? allGPAs[allGPAs.length - 1] - allGPAs[allGPAs.length - 2] : 0;
-
-
-  // Toggle individual section
   const toggleSection = (id) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -58,18 +70,18 @@ export default function Analytics({ semesters }) {
     }));
   };
 
-
+  // Section Component with the requested styling
   const Section = ({ id, title, icon: Icon, children }) => {
     const isExpanded = expandedSections[id];
     
     return (
-      <div className="border border-gray-200 rounded-lg overflow-hidden mb-2">
+      <div className="border border-gray-200 rounded-lg overflow-hidden mb-2 bg-white">
         <button
           onClick={() => toggleSection(id)}
           className="w-full flex items-center justify-between p-2 bg-gray-50 hover:bg-gray-100 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Icon size={16} className="text-primary-600" />
+            <Icon size={16} className="text-blue-600" />
             <span className="text-sm font-semibold text-gray-800">{title}</span>
           </div>
           {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -79,19 +91,27 @@ export default function Analytics({ semesters }) {
     );
   };
 
+  if (!semesters || semesters.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center text-gray-400">
+        <TrendingUp size={48} className="mb-2 opacity-20" />
+        <p className="text-sm">No analytics data available.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2 animate-fade-in">
-      {/* GPA Trend Chart - Always visible and toggleable */}
+      {/* GPA Trend Chart */}
       <Section id="trend" title="GPA Trend" icon={TrendingUp}>
         <ResponsiveContainer width="100%" height={160}>
-          <LineChart data={trendData}>
+          <LineChart data={breakdownData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="#6b7280" />
             <YAxis domain={[0, 10]} tick={{ fontSize: 11 }} stroke="#6b7280" />
             <Tooltip 
               contentStyle={{ fontSize: '11px', padding: '4px 8px' }}
-              formatter={(value) => value.toFixed(2)}
+              formatter={(value) => (typeof value === 'number' ? value.toFixed(2) : value)}
             />
             <Line 
               type="monotone" 
@@ -105,8 +125,7 @@ export default function Analytics({ semesters }) {
         </ResponsiveContainer>
       </Section>
 
-
-      {/* Grade Distribution - Always visible and toggleable */}
+      {/* Grade Distribution */}
       <Section id="grades" title="Grade Distribution" icon={Award}>
         <div className="flex items-center gap-4">
           <div className="flex-1">
@@ -146,24 +165,23 @@ export default function Analytics({ semesters }) {
         </div>
       </Section>
 
-
       {/* Credits Distribution */}
       <Section id="credits" title="Credits per Semester" icon={BookOpen}>
         <ResponsiveContainer width="100%" height={140}>
-          <BarChart data={trendData}>
+          <BarChart data={breakdownData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="#6b7280" />
             <YAxis tick={{ fontSize: 11 }} stroke="#6b7280" />
             <Tooltip contentStyle={{ fontSize: '11px', padding: '4px 8px' }} />
-            <Bar dataKey="credits" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="totalCredits" fill="#3b82f6" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Section>
 
-      {/* Semester Breakdown */}
+      {/* Semester Breakdown Details */}
       <Section id="semesters" title="Semester Details" icon={BookOpen}>
         <div className="space-y-1.5 max-h-48 overflow-y-auto">
-          {breakdown.map((sem, index) => (
+          {breakdownData.map((sem) => (
             <div 
               key={sem.semester}
               className="flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
@@ -191,21 +209,20 @@ export default function Analytics({ semesters }) {
         </div>
       </Section>
 
-
       {/* Compact Stats Banner */}
-      <div className="card p-2 bg-gradient-to-r from-primary-50 to-blue-50">
-        <div className="grid grid-cols-4 gap-2 text-center">
+      <div className="p-3 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 shadow-sm">
+        <div className="grid grid-cols-3 gap-2 text-center">
           <div>
-            <div className="text-lg font-bold text-primary-700">{avgGPA.toFixed(2)}</div>
-            <div className="text-[10px] text-gray-600">Avg GPA</div>
+            <div className="text-lg font-bold text-blue-700">{cgpaStats.gpa.toFixed(2)}</div>
+            <div className="text-[10px] text-blue-600 font-medium">CGPA</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-green-700">{maxGPA.toFixed(2)}</div>
-            <div className="text-[10px] text-gray-600">Best</div>
+            <div className="text-lg font-bold text-emerald-700">{cgpaStats.earnedCredits}</div>
+            <div className="text-[10px] text-emerald-600 font-medium">Credits</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-gray-700">{totalCredits}</div>
-            <div className="text-[10px] text-gray-600">Credits</div>
+            <div className="text-lg font-bold text-indigo-700">{cgpaStats.courseCount}</div>
+            <div className="text-[10px] text-indigo-600 font-medium">Courses</div>
           </div>
         </div>
       </div>

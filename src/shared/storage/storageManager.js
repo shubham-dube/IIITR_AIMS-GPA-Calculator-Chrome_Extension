@@ -86,4 +86,9 @@ export class StorageManager {
   static async getProjectedGrades() {
     return await this.get(STORAGE_KEYS.PROJECTED_GRADES, []);
   }
+
+  static async getProjectedGrades() {
+    const result = await chrome.storage.local.get('projected_grades');
+    return result.projected_grades || [];
+  }
 }

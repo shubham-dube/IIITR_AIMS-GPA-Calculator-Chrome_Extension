@@ -1,3 +1,6 @@
+/**
+ * Global Grade System Configuration
+ */
 export const GRADE_POINTS = {
   'A+': 10,
   'A': 10,
@@ -7,38 +10,22 @@ export const GRADE_POINTS = {
   'C': 6,
   'C-': 5,
   'D': 4,
-  'F': 0,
-  'FR': 0,
-  'FS': 0,
-  'I': null,  // Incomplete - not counted
-  'S': null,  // Satisfactory - not counted in GPA
-  'U': null,  // Unsatisfactory - not counted in GPA
-  'AU': null, // Audit - not counted in GPA
+  'F': 0,    // Standard: 0 points
+  'FR': 0,   // Standard: 0 points
+  'FS': 0,   // Standard: 0 points
+  'I': null,
+  'S': null,
+  'U': null,
+  'AU': null,
 };
 
-export const GRADE_DESCRIPTIONS = {
-  'A+': 'Outstanding',
-  'A': 'Excellent',
-  'A-': 'Very Good',
-  'B': 'Good',
-  'B-': 'Above Average',
-  'C': 'Average',
-  'C-': 'Below Average',
-  'D': 'Marginal',
-  'F': 'Fail',
-  'FR': 'Fail (Reappear)',
-  'FS': 'Fail (Absent)',
-  'I': 'Incomplete',
-  'S': 'Satisfactory',
-  'U': 'Unsatisfactory',
-  'AU': 'Audit',
-};
+// Grades that should be ignored entirely in Projected mode
+export const PROJECTED_IGNORE_GRADES = ['F', 'FR', 'FS'];
+
+// Grades that are never counted regardless of context
+export const ALWAYS_NON_COUNTED = ['I', 'S', 'U', 'AU'];
 
 export const PASSING_GRADES = ['A+', 'A', 'A-', 'B', 'B-', 'C', 'C-', 'D', 'S'];
-
-export const FAILING_GRADES = ['F', 'FR', 'FS', 'U'];
-
-export const NON_COUNTED_GRADES = ['I', 'S', 'U', 'AU'];
 
 export const GRADE_COLORS = {
   'A+': 'text-green-600',
@@ -49,11 +36,7 @@ export const GRADE_COLORS = {
   'C': 'text-yellow-600',
   'C-': 'text-yellow-500',
   'D': 'text-orange-600',
-  'F': 'text-red-600',
-  'FR': 'text-red-600',
-  'FS': 'text-red-600',
-  'I': 'text-gray-500',
-  'S': 'text-purple-600',
-  'U': 'text-red-500',
-  'AU': 'text-gray-500',
+  'F': 'text-red-400',
+  'FR': 'text-red-400',
+  'FS': 'text-red-400',
 };
