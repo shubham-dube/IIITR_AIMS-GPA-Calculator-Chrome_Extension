@@ -33,7 +33,7 @@ export default function Analytics({ semesters = [] }) {
         totalCredits: stats.totalCredits,
         courseCount: stats.courseCount,
       };
-    });
+    }).reverse();
     return data;
   }, [semesters]);
 

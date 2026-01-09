@@ -33,7 +33,7 @@ export default function ProjectedGPA({ semesters = [] }) {
         ...c,
         semester: semName,
         uid: uid,
-        displayName: `${c.code}: ${c.grade} (${c.credits}cr)`
+        displayName: `${c.title} (${c.code}): ${c.grade} (${c.credits}cr)`
       };
     })).filter(c => GRADE_POINTS[c.grade] !== null);
   }, [semesters]);

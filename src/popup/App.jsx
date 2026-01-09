@@ -176,7 +176,7 @@ export default function App() {
                           rel="noopener noreferrer"
                           className="btn-primary text-sm inline-block p-2 px-4"
                         >
-                          Open Course History
+                          Open Course History (AIMS IIIT Raichur)
                         </a>
                       </div>
                     </div>

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GPA GENIE — CGPA Calculator",
   "description": "Calculate CGPA, project grades, view analytics, and generate professional transcripts for AIMS Portal",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "permissions": [
     "activeTab",
     "storage",
@@ -20,7 +20,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage*"],
+      "matches": [
+        "https://aims.iiitr.ac.in/iiitraichur/courseReg/*",
+        "https://aims.iiitdwd.ac.in/*/courseReg/*",
+        "https://aims.iith.ac.in/*/courseReg/*",
+        "https://aims.iiitk.ac.in/*/courseReg/*"
+      ],
       "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"

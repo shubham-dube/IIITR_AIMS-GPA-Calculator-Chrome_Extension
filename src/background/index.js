@@ -84,8 +84,14 @@ chrome.contextMenus.create({
   id: 'calculate-gpa',
   title: 'Calculate GPA with GPA Genie',
   contexts: ['page'],
-  documentUrlPatterns: ['https://aims.iiitr.ac.in/iiitraichur/courseReg/myCrsHistoryPage*'],
+  documentUrlPatterns: [
+    'https://aims.iiitr.ac.in/iiitraichur/courseReg/*',
+    'https://aims.iiitdwd.ac.in/*/courseReg/*',
+    'https://aims.iith.ac.in/*/courseReg/*',
+    'https://aims.iiitk.ac.in/*/courseReg/*'
+  ],
 });
+
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'calculate-gpa') {
